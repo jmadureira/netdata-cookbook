@@ -12,7 +12,7 @@ Live demo: http://netdata.firehol.org
 Github: https://github.com/firehol/netdata
 
 Requirements
-----------ł-
+------------
 
 ### Platforms
 
