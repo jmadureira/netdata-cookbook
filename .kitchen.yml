@@ -1,0 +1,31 @@
+driver:
+  name: vagrant
+  network:
+    - ["public_network", { bridge: 'en0: Ethernet' } ]
+
+
+provisioner:
+  name: chef_solo
+  require_chef_omnibus: 12.5.1
+  data_path: test/fixtures
+
+transport:
+  compression: none
+
+platforms:
+  - name: centos-6.7
+    driver_config:
+      customize:
+        memory: 1024
+  - name: ubuntu-14.04
+    driver_config:
+      customize:
+        memory: 1024
+
+suites:
+  - name: general
+    run_list:
+      - recipe[netdata]
+    attributes:
+      default: default
+
