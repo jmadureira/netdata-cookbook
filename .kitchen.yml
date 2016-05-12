@@ -21,7 +21,10 @@ platforms:
     driver_config:
       customize:
         memory: 1024
-
+  - name: centos-7.2
+    driver_config:
+      customize:
+        memory: 1024
 suites:
   - name: general
     run_list:
