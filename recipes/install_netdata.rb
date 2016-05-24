@@ -16,9 +16,9 @@
 # limitations under the License.
 
 case node['platform_family']
-when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
+when 'rhel', 'redhat', 'centos'
 
-	%w{zlib-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
+	%w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
 		package pkg do
 			action :install
 		end
@@ -43,7 +43,7 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 		end
 	end
 when 'ubuntu','debian'
-	%w{zlib1g-dev gcc make git autoconf autogen automake pkg-config}.each do |pkg|
+	%w{zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config}.each do |pkg|
 		package pkg do
 			action :install
 		end

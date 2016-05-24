@@ -17,12 +17,16 @@ platforms:
     driver_config:
       customize:
         memory: 1024
+  - name: centos-7.2
+    driver_config:
+      customize:
+        memory: 1024
   - name: ubuntu-14.04
     driver_config:
       customize:
         memory: 1024
-  - name: centos-7.2
-    driver_config:
+  - name: ubuntu-16.04
+    drive_config:
       customize:
         memory: 1024
 suites:

@@ -16,7 +16,7 @@
 # limitations under the License.
 
 case node['platform_family'] 
-when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
+when 'rhel', 'redhat', 'centos' 
 	node.default['yum']['epel-testing']['enabled'] = true
 	node.default['yum']['epel-testing']['managed'] = true
 	include_recipe 'yum-epel'
