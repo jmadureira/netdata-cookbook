@@ -1,8 +1,8 @@
 driver:
   name: vagrant
   network:
-    - ["public_network", { bridge: 'en0: Ethernet' } ]
-
+#    - ["public_network", { bridge: 'en0: Ethernet' } ]
+    - ["public_network", { bridge: 'en1: Wi-Fi (AirPort)' } ]
 
 provisioner:
   name: chef_solo

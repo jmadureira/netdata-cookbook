@@ -16,7 +16,7 @@
 # limitations under the License.
 
 case node['platform_family']
-when 'rhel', 'redhat', 'centos'
+when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 
 	%w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
 		package pkg do
@@ -35,7 +35,7 @@ when 'rhel', 'redhat', 'centos'
 		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
 	end
 
-	%w{zlib-devel gcc make git autoconf autogen automake pkgconfig}.each do |logger|
+	%w{gcc make git autoconf autogen automake pkgconfig}.each do |logger|
 		log logger do
 			action :nothing
 			subscribes :write, "package[#{logger}]"
@@ -60,7 +60,7 @@ when 'ubuntu','debian'
 		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
 	end
 
-	%w{zlib1g-dev gcc make git autoconf autogen automake pkg-config}.each do |logger|
+	%w{gcc make git autoconf autogen automake pkg-config}.each do |logger|
 		log logger do
 			action :nothing
 			subscribes :write, "package[#{logger}]"

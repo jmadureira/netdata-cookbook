@@ -20,7 +20,7 @@ require 'spec_helper'
 describe 'netdata::install_netdata' do
 	let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos').converge(described_recipe) }
 
-	%w{zlib-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
+	%w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
 		it "installs the #{pkg} package" do
 			expect(chef_run).to install_package(pkg)
 		end
@@ -34,7 +34,7 @@ describe 'netdata::install_netdata' do
 		expect(chef_run).to run_execute('install')
 	end
 
-	%w{zlib-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
+	%w{gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
 		it 'logs do nothing' do
 			log = chef_run.log(pkg)
 			expect(log).to do_nothing
