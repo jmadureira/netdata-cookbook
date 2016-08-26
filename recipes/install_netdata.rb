@@ -28,11 +28,13 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 		repository "https://github.com/firehol/netdata.git"
 		reference "master"
 		action :sync
+		notifies :run, 'execute[install]', :immediately
 	end
 
 	execute 'install' do
 		cwd '/tmp/netdata'
 		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
+		action :nothing
 	end
 
 	%w{gcc make git autoconf autogen automake pkgconfig}.each do |logger|
@@ -53,11 +55,13 @@ when 'ubuntu','debian'
 		repository "https://github.com/firehol/netdata.git"
 		reference "master"
 		action :sync
+		notifies :run, 'execute[install]', :immediately
 	end
 
 	execute 'install' do
 		cwd '/tmp/netdata'
 		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
+		action :nothing
 	end
 
 	%w{gcc make git autoconf autogen automake pkg-config}.each do |logger|
@@ -70,4 +74,3 @@ when 'ubuntu','debian'
 else
 	raise("Unsupported platform family")
 end
-
