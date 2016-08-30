@@ -24,7 +24,7 @@ Requirements
 - Chef 12.0 or later
 
 ### Cookbooks
-  
+
 - `yum-epel` = 0.7.0
 
 Recipes
@@ -34,7 +34,7 @@ Recipes
 
 This would install NetData on supported platforms. At the moment this product does not have any distribution packages and only supported installation method it to compile sources.
 
-NetData cookbook will install required dependencies and after compilation succeedis those deps will be removed, except those packages that already were installed on the server prior to chef run.
+NetData cookbook will install required dependencies and after compilation succeeds those deps will be removed, except those packages that already were installed on the server prior to chef run.
 
 ## Usage
 
@@ -63,4 +63,3 @@ Just include `netdata` in your node's `run_list`
 ## License and Authors
 
 Authors: Sergio Pena <sergio.pena@abiquo.com>
-
