@@ -15,11 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-case node['platform_family'] 
-when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle' 
-	node.default['yum']['epel-testing']['enabled'] = true
-	node.default['yum']['epel-testing']['managed'] = true
-	include_recipe 'yum-epel'
+case node['platform_family']
+when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
+	if node['platform_version'] =~ /^6/
+		node.default['yum']['epel-testing']['enabled'] = true
+		node.default['yum']['epel-testing']['managed'] = true
+		include_recipe 'yum-epel'
+	end
 when 'ubuntu','debian'
 	true
 else
