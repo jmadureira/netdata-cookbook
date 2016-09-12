@@ -32,6 +32,27 @@ describe 'netdata::install_netdata' do
 		}
 	}
 
+	describe 'git configuration' do
+
+    let(:git_reference) { '1.3.0' }
+		let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
+		let(:chef_run) {
+			ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') do |node|
+				node.normal['netdata']['source']['git_repository'] = git_repository
+				node.normal['netdata']['source']['git_revision'] = git_reference
+			end.converge(described_recipe)
+		}
+
+		it 'uses a configurable git reference' do
+			expect(chef_run).to sync_git("/tmp/netdata").with(reference: git_reference)
+		end
+
+		it 'uses a configurable git repository' do
+			expect(chef_run).to sync_git("/tmp/netdata").with(repository: git_repository)
+		end
+
+	end
+
   platform_check.each do |platform, options|
 
 		describe platform do
@@ -49,7 +70,7 @@ describe 'netdata::install_netdata' do
 	        end
 
         	it 'clones github repo on /tmp folder' do
-	        	expect(chef_run).to sync_git("/tmp/netdata")
+            expect(chef_run).to sync_git("/tmp/netdata").with(reference: 'master')
         	end
 
         	it 'notifies the installer execution' do
