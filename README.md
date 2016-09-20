@@ -2,7 +2,7 @@ NetData Cookbook
 ================
 
 [![Build Status](https://travis-ci.org/sergiopena/netdata-cookbook.svg?branch=master)](https://travis-ci.org/sergiopena/netdata-cookbook)
-[![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.1.5-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
+[![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.1.6-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
 [![Chef Version](http://img.shields.io/badge/chef-v12.9.38-orange.svg?style=flat)](https://www.chef.io)
 
 This cookbook provides a way to download and install NetData from FireHol, a real-time performance monitoring.
