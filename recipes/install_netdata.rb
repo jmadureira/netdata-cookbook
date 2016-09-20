@@ -25,8 +25,8 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 	end
 
 	git "/tmp/netdata" do
-		repository "https://github.com/firehol/netdata.git"
-		reference "master"
+		repository node['netdata']['source']['git_repository']
+		reference node['netdata']['source']['git_revision']
 		action :sync
 		notifies :run, 'execute[install]', :immediately
 	end

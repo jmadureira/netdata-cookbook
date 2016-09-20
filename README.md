@@ -32,7 +32,7 @@ Recipes
 
 ### netdata::default
 
-This would install NetData on supported platforms. At the moment this product does not have any distribution packages and only supported installation method it to compile sources.
+This would install NetData on supported platforms. At the moment this product does not have any distribution packages and the only supported installation method is to compile sources.
 
 NetData cookbook will install required dependencies and after compilation succeeds those deps will be removed, except those packages that already were installed on the server prior to chef run.
 
@@ -50,6 +50,11 @@ Just include `netdata` in your node's `run_list`
   ]
 }
 ```
+
+## Attributes
+
+- `node['netdata']['source']['git_repository']` - Netdata git repository. Defaults to https://github.com/firehol/netdata.git
+- `node['netdata']['source']['git_revision']` - Netdata repository git reference. Can be a tag, branch or master. Defaults to master.
 
 ## Contributing
 
