@@ -56,6 +56,8 @@ Just include `netdata` in your node's `run_list`
 - `node['netdata']['source']['git_repository']` - Netdata git repository. Defaults to https://github.com/firehol/netdata.git
 - `node['netdata']['source']['git_revision']` - Netdata repository git reference. Can be a tag, branch or master. Defaults to master.
 
+- `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
+
 ## Contributing
 
 1. Fork the repository on Github

@@ -23,12 +23,14 @@ describe 'netdata::install_netdata' do
 		'centos' => {
 			versions: ['6.7'],
 			install_packages: %w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig},
-			log_packages: %w{gcc make git autoconf autogen automake pkgconfig}
+			log_packages: %w{gcc make git autoconf autogen automake pkgconfig},
+			mysql_packages: %w{MySQL-python}
 		},
 		'ubuntu' => {
 			versions: ['14.04'],
 			install_packages: %w{zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config},
-			log_packages: %w{gcc make git autoconf autogen automake pkg-config}
+			log_packages: %w{gcc make git autoconf autogen automake pkg-config},
+			mysql_packages: %w{python-mysqldb}
 		}
 	}
 
@@ -98,6 +100,34 @@ describe 'netdata::install_netdata' do
 	      	  	expect(log).to subscribe_to("package[#{pkg}]").on(:write)
         		end
 					end
+				end
+
+				describe version do
+
+					describe 'python plugin' do
+
+					  describe 'mysql module' do
+
+							let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version) }
+
+							options[:mysql_packages].each do |pkg|
+
+								it "does not install #{pkg} package dependency by default" do
+									chef_run.converge(described_recipe)
+									expect(chef_run).to_not install_package(pkg)
+								end
+
+		      	  	it "installs the #{pkg} package dependency" do
+									chef_run.node.normal['netdata']['plugins']['python']['mysql']['enabled'] = true
+									chef_run.converge(described_recipe)
+									expect(chef_run).to install_package(pkg)
+		        		end
+			        end
+
+					  end
+
+					end
+
 				end
 		  end
 		end
