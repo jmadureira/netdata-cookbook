@@ -67,4 +67,7 @@ Just include `netdata` in your node's `run_list`
 
 ## License and Authors
 
-Authors: Sergio Pena <sergio.pena@abiquo.com>
+Authors: 
+* Sergio Pena https://github.com/sergiopena
+* João Madureira https://github.com/jmadureira
+
