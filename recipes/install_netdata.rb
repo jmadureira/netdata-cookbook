@@ -18,7 +18,11 @@
 case node['platform_family']
 when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 
-	%w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}.each do |pkg|
+	runtime_dependencies = %w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}
+	if node['netdata']['plugins']['python']['mysql']['enabled']
+		runtime_dependencies << 'MySQL-python'
+	end
+	runtime_dependencies.each do |pkg|
 		package pkg do
 			action :install
 		end
@@ -45,7 +49,12 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 		end
 	end
 when 'ubuntu','debian'
-	%w{zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config}.each do |pkg|
+
+	runtime_dependencies = %w{zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config}
+	if node['netdata']['plugins']['python']['mysql']['enabled']
+		runtime_dependencies << 'python-mysqldb'
+	end
+	runtime_dependencies.each do |pkg|
 		package pkg do
 			action :install
 		end
