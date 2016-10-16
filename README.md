@@ -59,6 +59,8 @@ Just include `netdata` in your node's `run_list`
 
 - `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
 
+- `node['netdata']['plugins']['python']['nginx']['config']` - Hash with the JOBS configuration. Attributes will be merged with the default netdata configuration.
+
 ## Contributing
 
 1. Fork the repository on Github

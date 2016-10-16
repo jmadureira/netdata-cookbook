@@ -34,6 +34,51 @@ describe 'netdata::install_netdata' do
 		}
 	}
 
+	describe 'python modules' do
+
+		let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') }
+
+		describe 'nginx' do
+
+			let(:file_path) { '/etc/netdata/python.d/nginx.conf' }
+
+			it 'updates the configuration' do
+				expect(chef_run.converge(described_recipe)).to render_file(file_path)
+			end
+
+			it 'uses default configuration' do
+				expect(chef_run.converge(described_recipe)).to render_file(file_path).with_content { |content|
+					expect(content).to include('http://localhost/stub_status')
+					expect(content).to include('http://127.0.0.1/stub_status')
+					expect(content).to include('http://::1/stub_status')
+				}
+			end
+
+			it 'uses custom configuration' do
+				chef_run.node.normal['netdata']['plugins']['python']['nginx']['config'] = {
+				  'localhost' => {
+				    'name' => 'test',
+				    'url' => 'http://127.0.0.1:8080/stub_status'
+				  }
+				}
+        chef_run.converge(described_recipe)
+
+				expect(chef_run).to render_file(file_path).with_content { |content|
+					expect(content).to include('localhost')
+					expect(content).to include('http://127.0.0.1:8080/stub_status')
+					expect(content).to_not include('http://localhost/stub_status')
+				}
+			end
+
+			it 'notifies the netdata service' do
+				template = chef_run.converge(described_recipe).template file_path
+				expect(template).to notify('service[netdata]')
+			end
+
+		end
+
+	end
+
   platform_check.each do |platform, options|
 
 		describe platform do
