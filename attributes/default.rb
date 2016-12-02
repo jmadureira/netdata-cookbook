@@ -6,6 +6,11 @@ default['netdata']['source']['git_repository'] = 'https://github.com/firehol/net
 # Defaults to master.
 default['netdata']['source']['git_revision'] = 'master'
 
+# Local directory where the netdata repo will be cloned
+# Defaults to /tmp/netdata but should be replaced because most UNIX system
+# periodically clean the /tmp directory
+default['netdata']['source']['directory'] = '/tmp/netdata'
+
 ########################################################################
 # Python plugin configuration
 ########################################################################

@@ -34,32 +34,38 @@ describe 'netdata::install_netdata' do
 		}
 	}
 
-	describe 'git configuration' do
-
-    let(:git_reference) { '1.3.0' }
-		let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
-		let(:chef_run) {
-			ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') do |node|
-				node.normal['netdata']['source']['git_repository'] = git_repository
-				node.normal['netdata']['source']['git_revision'] = git_reference
-			end.converge(described_recipe)
-		}
-
-		it 'uses a configurable git reference' do
-			expect(chef_run).to sync_git("/tmp/netdata").with(reference: git_reference)
-		end
-
-		it 'uses a configurable git repository' do
-			expect(chef_run).to sync_git("/tmp/netdata").with(repository: git_repository)
-		end
-
-	end
-
   platform_check.each do |platform, options|
 
 		describe platform do
 
 			options[:versions].each do |version|
+
+				describe version do
+
+					describe 'git configuration' do
+
+				    let(:git_reference) { '1.3.0' }
+						let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
+						let(:git_directory) { '/var/tmp/new_directory' }
+						let(:chef_run) {
+							ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
+								node.normal['netdata']['source']['git_repository'] = git_repository
+								node.normal['netdata']['source']['git_revision'] = git_reference
+								node.normal['netdata']['source']['directory'] = git_directory
+							end.converge(described_recipe)
+						}
+
+						it 'uses a configurable git reference' do
+							expect(chef_run).to sync_git(git_directory).with(reference: git_reference)
+						end
+
+						it 'uses a configurable git repository' do
+							expect(chef_run).to sync_git(git_directory).with(repository: git_repository)
+						end
+
+					end
+
+				end
 
 				describe version do
 
@@ -71,12 +77,12 @@ describe 'netdata::install_netdata' do
         		end
 	        end
 
-        	it 'clones github repo on /tmp folder' do
-            expect(chef_run).to sync_git("/tmp/netdata").with(reference: 'master')
+          it 'clones github repo on default folder' do
+            expect(chef_run).to sync_git(chef_run.node['netdata']['source']['directory']).with(reference: 'master')
         	end
 
         	it 'notifies the installer execution' do
-	        	git_command = chef_run.git('/tmp/netdata')
+            git_command = chef_run.git(chef_run.node['netdata']['source']['directory'])
 	      	  expect(git_command).to notify('execute[install]')
 	        end
 

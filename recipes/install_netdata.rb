@@ -28,7 +28,7 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 		end
 	end
 
-	git "/tmp/netdata" do
+	git node['netdata']['source']['directory'] do
 		repository node['netdata']['source']['git_repository']
 		reference node['netdata']['source']['git_revision']
 		action :sync
@@ -36,8 +36,8 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
 	end
 
 	execute 'install' do
-		cwd '/tmp/netdata'
-		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
+		cwd node['netdata']['source']['directory']
+		command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
 		action :nothing
 	end
 
@@ -60,16 +60,16 @@ when 'ubuntu','debian'
 		end
 	end
 
-	git "/tmp/netdata" do
-		repository "https://github.com/firehol/netdata.git"
-		reference "master"
+	git node['netdata']['source']['directory'] do
+		repository node['netdata']['source']['git_repository']
+		reference node['netdata']['source']['git_revision']
 		action :sync
 		notifies :run, 'execute[install]', :immediately
 	end
 
 	execute 'install' do
-		cwd '/tmp/netdata'
-		command '/tmp/netdata/netdata-installer.sh --zlib-is-really-here --dont-wait'
+		cwd node['netdata']['source']['directory']
+		command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
 		action :nothing
 	end
 

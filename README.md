@@ -55,6 +55,7 @@ Just include `netdata` in your node's `run_list`
 
 - `node['netdata']['source']['git_repository']` - Netdata git repository. Defaults to https://github.com/firehol/netdata.git
 - `node['netdata']['source']['git_revision']` - Netdata repository git reference. Can be a tag, branch or master. Defaults to master.
+- `node['netdata']['source']['directory']` - Local directory where the netdata repo will be cloned. Defaults to /tmp/netdata but should be replaced because most UNIX system periodically clean the /tmp directory.
 
 - `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
 
@@ -69,7 +70,6 @@ Just include `netdata` in your node's `run_list`
 
 ## License and Authors
 
-Authors: 
+Authors:
 * Sergio Pena https://github.com/sergiopena
 * João Madureira https://github.com/jmadureira
-
