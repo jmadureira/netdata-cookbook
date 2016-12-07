@@ -34,69 +34,6 @@ describe 'netdata::install_netdata' do
 		}
 	}
 
-	describe 'python modules' do
-
-		let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') }
-
-		describe 'nginx' do
-
-			let(:file_path) { '/etc/netdata/python.d/nginx.conf' }
-
-			it 'updates the configuration' do
-				expect(chef_run.converge(described_recipe)).to render_file(file_path)
-			end
-
-			it 'uses default configuration' do
-				expect(chef_run.converge(described_recipe)).to render_file(file_path).with_content { |content|
-					expect(content).to include('http://localhost/stub_status')
-					expect(content).to include('http://127.0.0.1/stub_status')
-					expect(content).to include('http://::1/stub_status')
-				}
-			end
-
-			it 'uses custom configuration' do
-				chef_run.node.normal['netdata']['plugins']['python']['nginx']['config'] = {
-				  'localhost' => {
-				    'name' => 'test',
-				    'url' => 'http://127.0.0.1:8080/stub_status'
-				  }
-				}
-        chef_run.converge(described_recipe)
-
-				expect(chef_run).to render_file(file_path).with_content { |content|
-					expect(content).to include('localhost')
-					expect(content).to include('http://127.0.0.1:8080/stub_status')
-					expect(content).to_not include('http://localhost/stub_status')
-				}
-			end
-
-			it 'notifies the netdata service' do
-				template = chef_run.converge(described_recipe).template file_path
-				expect(template).to notify('service[netdata]')
-			end
-	end
-
-	describe 'git configuration' do
-
-    let(:git_reference) { '1.3.0' }
-		let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
-		let(:chef_run) {
-			ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') do |node|
-				node.normal['netdata']['source']['git_repository'] = git_repository
-				node.normal['netdata']['source']['git_revision'] = git_reference
-			end.converge(described_recipe)
-		}
-
-		it 'uses a configurable git reference' do
-			expect(chef_run).to sync_git("/tmp/netdata").with(reference: git_reference)
-		end
-
-		it 'uses a configurable git repository' do
-			expect(chef_run).to sync_git("/tmp/netdata").with(repository: git_repository)
-		end
-
-	end
-
   platform_check.each do |platform, options|
 
 		describe platform do
