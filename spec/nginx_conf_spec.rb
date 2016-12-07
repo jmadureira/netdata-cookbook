@@ -17,12 +17,48 @@
 
 require 'spec_helper'
 
-describe 'netdata::default' do
+describe 'netdata_test::default' do
+
+  let(:platform) { 'centos' }
+  let(:version) { '6.7' }
+  let(:file_path) { '/etc/netdata/python.d/nginx.conf' }
+  let(:default_config) {
+    {
+      'localhost' => {
+        'name' => 'local',
+        'url' => 'http://localhost/stub_status'
+      },
+      'localipv4' => {
+        'name' => 'local',
+        'url' => 'http://127.0.0.1/stub_status'
+      },
+      'localipv6' => {
+        'name' => 'local',
+        'url' => 'http://::1/stub_status'
+      }
+    }
+  }
+
+  describe 'python nginx provider matcher' do
+
+    let(:chef_run) {
+      ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
+        node.normal['netdata']['plugins']['python']['nginx']['config'] = default_config
+      end
+    }
+
+    it 'configures nginx' do
+      expect(chef_run.converge(described_recipe)).to configure_netdata_nginx_module('default_config')
+    end
+  end
 
   describe 'python nginx module' do
 
-    let(:chef_run) { ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7', step_into: ['netdata_nginx_conf']) }
-    let(:file_path) { '/etc/netdata/python.d/nginx.conf' }
+    let(:chef_run) {
+      ChefSpec::SoloRunner.new(platform: platform, version: version, step_into: ['netdata_nginx_conf']) do |node|
+        node.normal['netdata']['plugins']['python']['nginx']['config'] = default_config
+      end
+    }
 
     it 'updates the configuration' do
       expect(chef_run.converge(described_recipe)).to render_file(file_path)

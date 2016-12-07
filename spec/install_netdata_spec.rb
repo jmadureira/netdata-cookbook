@@ -170,30 +170,11 @@ describe 'netdata::install_netdata' do
         		end
 					end
 
-					it 'configures the python nginx module' do
-						expect(chef_run).to configure_netdata_nginx_module('default_config')
-					end
-
-					it 'does not start the netdata service' do
-						expect(chef_run).to_not start_service('netdata')
-					end
-
 				end
 
 				describe version do
 
 					describe 'python plugin' do
-
-						describe 'nginx module' do
-
-							let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version) }
-
-							it 'notifies the netdata service' do
-								config = chef_run.converge(described_recipe).netdata_nginx_conf('default_config')
-								expect(config).to notify('service[netdata]')
-							end
-
-						end
 
 					  describe 'mysql module' do
 

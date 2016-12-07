@@ -83,13 +83,3 @@ when 'ubuntu','debian'
 else
 	raise("Unsupported platform family")
 end
-
-# Update nginx configuration
-netdata_nginx_conf 'default_config' do
-	jobs node['netdata']['plugins']['python']['nginx']['config']
-	notifies :restart, "service[netdata]", :delayed
-end
-
-service 'netdata' do
-  action :nothing
-end

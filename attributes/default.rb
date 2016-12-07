@@ -18,24 +18,3 @@ default['netdata']['source']['directory'] = '/tmp/netdata'
 # If set to true will also install all necessary dependencies
 # Defaults to false
 default['netdata']['plugins']['python']['mysql']['enabled'] = false
-
-########################################################################
-# Nginx plugin configuration
-########################################################################
-# Netadata Nginx python configuration
-# Accepts a hash of job name -> job configuration entries that will be merged with the default configuration.
-# Defaults to the original netdata configuration
-default['netdata']['plugins']['python']['nginx']['config'] = {
-  'localhost' => {
-    'name' => 'local',
-    'url' => 'http://localhost/stub_status'
-  },
-  'localipv4' => {
-    'name' => 'local',
-    'url' => 'http://127.0.0.1/stub_status'
-  },
-  'localipv6' => {
-    'name' => 'local',
-    'url' => 'http://::1/stub_status'
-  }
-}
