@@ -74,7 +74,25 @@ describe 'netdata::install_netdata' do
 				template = chef_run.converge(described_recipe).template file_path
 				expect(template).to notify('service[netdata]')
 			end
+	end
 
+	describe 'git configuration' do
+
+    let(:git_reference) { '1.3.0' }
+		let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
+		let(:chef_run) {
+			ChefSpec::SoloRunner.new(platform: 'centos', version: '6.7') do |node|
+				node.normal['netdata']['source']['git_repository'] = git_repository
+				node.normal['netdata']['source']['git_revision'] = git_reference
+			end.converge(described_recipe)
+		}
+
+		it 'uses a configurable git reference' do
+			expect(chef_run).to sync_git("/tmp/netdata").with(reference: git_reference)
+		end
+
+		it 'uses a configurable git repository' do
+			expect(chef_run).to sync_git("/tmp/netdata").with(repository: git_repository)
 		end
 
 	end
@@ -151,11 +169,31 @@ describe 'netdata::install_netdata' do
 	      	  	expect(log).to subscribe_to("package[#{pkg}]").on(:write)
         		end
 					end
+
+					it 'configures the python nginx module' do
+						expect(chef_run).to configure_netdata_nginx_module('name')
+					end
+
+					it 'does not start the netdata service' do
+						expect(chef_run).to_not start_service('netdata')
+					end
+
 				end
 
 				describe version do
 
 					describe 'python plugin' do
+
+						describe 'nginx module' do
+
+							let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version) }
+
+							it 'notifies the netdata service' do
+								config = chef_run.converge(described_recipe).netdata_nginx_conf 'name'
+								expect(config).to notify('service[netdata]')
+							end
+
+						end
 
 					  describe 'mysql module' do
 

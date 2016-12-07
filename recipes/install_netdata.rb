@@ -85,13 +85,8 @@ else
 end
 
 # Update nginx configuration
-template '/etc/netdata/python.d/nginx.conf' do
-  source 'nginx.conf.erb'
-  mode 0644
-  owner 'netdata'
-  group 'netdata'
-	variables(:config => node['netdata']['plugins']['python']['nginx']['config'])
-  notifies :restart, "service[netdata]", :delayed
+netdata_nginx_conf 'name' do
+	notifies :restart, "service[netdata]", :delayed
 end
 
 service 'netdata' do
