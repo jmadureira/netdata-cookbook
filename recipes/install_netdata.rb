@@ -85,7 +85,8 @@ else
 end
 
 # Update nginx configuration
-netdata_nginx_conf 'name' do
+netdata_nginx_conf 'default_config' do
+	jobs node['netdata']['plugins']['python']['nginx']['config']
 	notifies :restart, "service[netdata]", :delayed
 end
 

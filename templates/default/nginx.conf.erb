@@ -67,7 +67,7 @@
 # ----------------------------------------------------------------------
 # AUTO-DETECTION JOBS
 # only one of them will run (they have the same name)
-<%- @config.each do |job, attrs| %>
+<%- @jobs.each do |job, attrs| %>
 <%= job %>:
   <%- ['name', 'url'].each do |param| %>
   <%= param %> : '<%= attrs[param] %>'
