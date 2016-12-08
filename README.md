@@ -59,6 +59,36 @@ Just include `netdata` in your node's `run_list`
 
 - `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
 
+## Resources
+
+### netdata_nginx_conf
+
+Configures the netdata python nginx configuration.
+
+```ruby
+jobs_config = {
+  'localhost' => {
+    'name' => 'local',
+    'url' => 'http://localhost/stub_status'
+  },
+  'localipv4' => {
+    'name' => 'local',
+    'url' => 'http://127.0.0.1/stub_status'
+  }
+}
+netdata_nginx_conf 'default_config' do
+  jobs jobs_config
+end
+```
+
+To test using `ChefSpec` you can use the provided matcher `configure_netdata_nginx_module`.
+
+```ruby
+it 'does something' do
+  expect(chef_run.converge(described_recipe)).to configure_netdata_nginx_module('some_config')
+end
+```
+
 ## Contributing
 
 1. Fork the repository on Github

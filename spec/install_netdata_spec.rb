@@ -106,6 +106,7 @@ describe 'netdata::install_netdata' do
 	      	  	expect(log).to subscribe_to("package[#{pkg}]").on(:write)
         		end
 					end
+
 				end
 
 				describe version do
