@@ -17,69 +17,67 @@
 
 case node['platform_family']
 when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
+  runtime_dependencies = %w(zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig)
+  if node['netdata']['plugins']['python']['mysql']['enabled']
+    runtime_dependencies << 'MySQL-python'
+  end
+  runtime_dependencies.each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
 
-	runtime_dependencies = %w{zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig}
-	if node['netdata']['plugins']['python']['mysql']['enabled']
-		runtime_dependencies << 'MySQL-python'
-	end
-	runtime_dependencies.each do |pkg|
-		package pkg do
-			action :install
-		end
-	end
+  git node['netdata']['source']['directory'] do
+    repository node['netdata']['source']['git_repository']
+    reference node['netdata']['source']['git_revision']
+    action :sync
+    notifies :run, 'execute[install]', :immediately
+  end
 
-	git node['netdata']['source']['directory'] do
-		repository node['netdata']['source']['git_repository']
-		reference node['netdata']['source']['git_revision']
-		action :sync
-		notifies :run, 'execute[install]', :immediately
-	end
+  execute 'install' do
+    cwd node['netdata']['source']['directory']
+    command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
+    action :nothing
+  end
 
-	execute 'install' do
-		cwd node['netdata']['source']['directory']
-		command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
-		action :nothing
-	end
+  %w(gcc make git autoconf autogen automake pkgconfig).each do |logger|
+    log logger do
+      action :nothing
+      subscribes :write, "package[#{logger}]"
+      notifies :remove, "package[#{logger}]", :delayed
+    end
+  end
+when 'ubuntu', 'debian'
+  runtime_dependencies = %w(zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config)
+  if node['netdata']['plugins']['python']['mysql']['enabled']
+    runtime_dependencies << 'python-mysqldb'
+  end
+  runtime_dependencies.each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
 
-	%w{gcc make git autoconf autogen automake pkgconfig}.each do |logger|
-		log logger do
-			action :nothing
-			subscribes :write, "package[#{logger}]"
-			notifies :remove, "package[#{logger}]", :delayed
-		end
-	end
-when 'ubuntu','debian'
+  git node['netdata']['source']['directory'] do
+    repository node['netdata']['source']['git_repository']
+    reference node['netdata']['source']['git_revision']
+    action :sync
+    notifies :run, 'execute[install]', :immediately
+  end
 
-	runtime_dependencies = %w{zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config}
-	if node['netdata']['plugins']['python']['mysql']['enabled']
-		runtime_dependencies << 'python-mysqldb'
-	end
-	runtime_dependencies.each do |pkg|
-		package pkg do
-			action :install
-		end
-	end
+  execute 'install' do
+    cwd node['netdata']['source']['directory']
+    command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
+    action :nothing
+  end
 
-	git node['netdata']['source']['directory'] do
-		repository node['netdata']['source']['git_repository']
-		reference node['netdata']['source']['git_revision']
-		action :sync
-		notifies :run, 'execute[install]', :immediately
-	end
-
-	execute 'install' do
-		cwd node['netdata']['source']['directory']
-		command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
-		action :nothing
-	end
-
-	%w{gcc make git autoconf autogen automake pkg-config}.each do |logger|
-		log logger do
-			action :nothing
-			subscribes :write, "package[#{logger}]"
-			notifies :remove, "package[#{logger}]", :delayed
-		end
-	end
+  %w(gcc make git autoconf autogen automake pkg-config).each do |logger|
+    log logger do
+      action :nothing
+      subscribes :write, "package[#{logger}]"
+      notifies :remove, "package[#{logger}]", :delayed
+    end
+  end
 else
-	raise("Unsupported platform family")
+  raise 'Unsupported platform family'
 end

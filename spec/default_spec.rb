@@ -18,51 +18,40 @@
 require 'spec_helper'
 
 describe 'netdata::default' do
-
-	yum_repo_platforms = {
-		'centos' => ['6.7']
-	}
+  yum_repo_platforms = {
+    'centos' => ['6.7']
+  }
 
   yum_repo_platforms.each do |platform, versions|
+    describe platform do
+      versions.each do |version|
+        describe version do
+          let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe) }
 
-		describe platform do
-
-			versions.each do |version|
-
-				describe version do
-
-	        let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe) }
-
-          it "includes the yum-epel recipe" do
-      		  expect(chef_run).to include_recipe('yum-epel')
-	        end
-
-				end
-		  end
-		end
-	end
+          it 'includes the yum-epel recipe' do
+            expect(chef_run).to include_recipe('yum-epel')
+          end
+        end
+      end
+    end
+  end
 
   no_yum_repo_platforms = {
-		'centos' => ['7.2.1511'],
-		'ubuntu' => ['14.04']
-	}
+    'centos' => ['7.2.1511'],
+    'ubuntu' => ['14.04']
+  }
 
   no_yum_repo_platforms.each do |platform, versions|
+    describe platform do
+      versions.each do |version|
+        describe version do
+          let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe) }
 
-		describe platform do
-
-			versions.each do |version|
-
-				describe version do
-
-	        let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe) }
-
-          it "does not include the yum-epel recipe" do
-      		  expect(chef_run).to_not include_recipe('yum-epel')
-	        end
-
-				end
-		  end
-		end
-	end
+          it 'does not include the yum-epel recipe' do
+            expect(chef_run).to_not include_recipe('yum-epel')
+          end
+        end
+      end
+    end
+  end
 end
