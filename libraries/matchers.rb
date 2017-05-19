@@ -16,11 +16,9 @@
 # limitations under the License.
 
 if defined?(ChefSpec)
-
   ChefSpec.define_matcher :netdata_nginx_conf
 
   def configure_netdata_nginx_module(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_nginx_conf, :create, resource_name)
   end
-
 end

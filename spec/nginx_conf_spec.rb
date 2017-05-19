@@ -18,7 +18,6 @@
 require 'spec_helper'
 
 describe 'netdata_test::default' do
-
   let(:platform) { 'centos' }
   let(:version) { '6.7' }
   let(:file_path) { '/etc/netdata/python.d/nginx.conf' }
@@ -40,7 +39,6 @@ describe 'netdata_test::default' do
   }
 
   describe 'python nginx provider matcher' do
-
     let(:chef_run) {
       ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
         node.normal['netdata']['plugins']['python']['nginx']['config'] = default_config
@@ -53,7 +51,6 @@ describe 'netdata_test::default' do
   end
 
   describe 'python nginx module' do
-
     let(:chef_run) {
       ChefSpec::SoloRunner.new(platform: platform, version: version, step_into: ['netdata_nginx_conf']) do |node|
         node.normal['netdata']['plugins']['python']['nginx']['config'] = default_config
@@ -87,7 +84,5 @@ describe 'netdata_test::default' do
         expect(content).to_not include('http://localhost/stub_status')
       }
     end
-
   end
-
 end

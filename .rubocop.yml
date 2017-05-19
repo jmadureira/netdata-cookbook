@@ -1,0 +1,25 @@
+LineLength:
+  Enabled: false
+HashSyntax:
+  Enabled: false
+#Documentation:
+#  Enabled: false
+#SpaceBeforeFirstArg:
+#  Enabled: false
+#NumericLiterals:
+#  Enabled: false
+#HashSyntax:
+#  Enabled: false
+BracesAroundHashParameters:
+  Enabled: false
+#IndentHash:
+#  Enabled: false
+#MethodLength:
+#  Enabled: false
+#ConditionalAssignment:
+#  Enabled: false
+#AbcSize:
+#  Enabled: false
+#UnneededInterpolation:
+#  Enabled: false
+
