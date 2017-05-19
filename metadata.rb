@@ -9,3 +9,4 @@ source_url		 'https://github.com/sergiopena/netdata-cookbook'
 issues_url		 'https://github.com/sergiopena/netdata-cookbook/issues'
 
 depends 'yum-epel'
+depends 'apt'

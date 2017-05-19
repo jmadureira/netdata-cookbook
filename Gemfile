@@ -11,3 +11,9 @@ group :integration do
     gem 'test-kitchen', '~> 1.7.3'
     gem 'kitchen-vagrant', '~> 0.20.0'
 end
+
+group :devel do
+  gem 'rubocop'
+  gem 'pry-byebug'
+end
+
