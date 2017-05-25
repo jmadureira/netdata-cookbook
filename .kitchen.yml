@@ -40,3 +40,5 @@ suites:
       - recipe[netdata]
     provisioner:
       require_chef_omnibus: '12.20.3'
+    verifier:
+      suite_name: general
