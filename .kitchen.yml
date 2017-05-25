@@ -8,9 +8,6 @@ provisioner:
   name: chef_zero
   data_path: test/fixtures
 
-transport:
-  compression: none
-
 platforms:
   - name: centos-6.7
     driver_config:
