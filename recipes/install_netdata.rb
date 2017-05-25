@@ -70,14 +70,6 @@ when 'ubuntu', 'debian'
     command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
     action :nothing
   end
-
-  %w(gcc make git autoconf autogen automake pkg-config).each do |logger|
-    log logger do
-      action :nothing
-      subscribes :write, "package[#{logger}]"
-      notifies :remove, "package[#{logger}]", :delayed
-    end
-  end
 else
   raise 'Unsupported platform family'
 end
