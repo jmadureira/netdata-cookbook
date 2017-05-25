@@ -1,3 +1,4 @@
+---
 driver:
   name: vagrant
   # network:
@@ -6,7 +7,6 @@ driver:
 
 provisioner:
   name: chef_zero
-  data_path: test/fixtures
 
 platforms:
   - name: centos-6.7
@@ -23,13 +23,6 @@ platforms:
     driver_config:
       customize:
         memory: 1024
-  - name: ubuntu-16.04
-    run_list:
-      - recipe[apt]
-    driver_config:
-      customize:
-        memory: 1024
-
   - name: ubuntu-16.04
     run_list:
       - recipe[apt]
