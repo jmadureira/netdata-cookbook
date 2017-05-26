@@ -80,23 +80,6 @@ describe 'netdata::install_netdata' do
           it 'does not run installer by default' do
             expect(chef_run).to_not run_execute('install')
           end
-
-          options[:log_packages].each do |pkg|
-            it 'logs do nothing' do
-              log = chef_run.log(pkg)
-              expect(log).to do_nothing
-            end
-
-            it 'notifies to remove pkgs delayed' do
-              log = chef_run.log(pkg)
-              expect(log).to notify("package[#{pkg}]").to(:remove).delayed
-            end
-
-            it "subscribes to install #{pkg} packages" do
-              log = chef_run.log(pkg)
-              expect(log).to subscribe_to("package[#{pkg}]").on(:write)
-            end
-          end
         end
 
         describe version do

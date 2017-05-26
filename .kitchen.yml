@@ -1,16 +1,12 @@
+---
 driver:
   name: vagrant
-  network:
-#    - ["public_network", { bridge: 'en0: Ethernet' } ]
-    - ["public_network", { bridge: 'en1: Wi-Fi (AirPort)' } ]
+  # network:
+  #  - ["public_network", { bridge: 'en0: Ethernet' } ]
+  #  - ["public_network", { bridge: 'en1: Wi-Fi (AirPort)' } ]
 
 provisioner:
-  name: chef_solo
-  require_chef_omnibus: 12.5.1
-  data_path: test/fixtures
-
-transport:
-  compression: none
+  name: chef_zero
 
 platforms:
   - name: centos-6.7
@@ -22,17 +18,27 @@ platforms:
       customize:
         memory: 1024
   - name: ubuntu-14.04
+    run_list:
+      - recipe[apt]
     driver_config:
       customize:
         memory: 1024
   - name: ubuntu-16.04
-    drive_config:
+    run_list:
+      - recipe[apt]
+    driver_config:
       customize:
         memory: 1024
+
 suites:
   - name: general
     run_list:
       - recipe[netdata]
-    attributes:
-      default: default
 
+  - name: general-chef12
+    run_list:
+      - recipe[netdata]
+    provisioner:
+      require_chef_omnibus: '12.20.3'
+    verifier:
+      suite_name: general
