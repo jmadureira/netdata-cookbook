@@ -39,14 +39,6 @@ when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
     command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
     action :nothing
   end
-
-  %w(gcc make git autoconf autogen automake pkgconfig).each do |logger|
-    log logger do
-      action :nothing
-      subscribes :write, "package[#{logger}]"
-      notifies :remove, "package[#{logger}]", :delayed
-    end
-  end
 when 'ubuntu', 'debian'
   runtime_dependencies = %w(zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config)
   if node['netdata']['plugins']['python']['mysql']['enabled']
