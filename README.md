@@ -72,8 +72,9 @@ Accepts the following attributes:
 - `group` - Group of the configuration file. Defaults to `netdata`.
 - `named_stats_path` - Location of the bind statistics file. Defaults to `nil` indicating that the default netdata location should be used.
 
+```ruby
 netdata_bind_rndc_conf 'customer_bind_config' do
-  named_stats_path 'custom path' #defaults to nil
+  named_stats_path 'custom path'
 end
 ```
 
