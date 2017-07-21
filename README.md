@@ -61,9 +61,34 @@ Just include `netdata` in your node's `run_list`
 
 ## Resources
 
+### netdata_bind_rndc_conf
+
+Configures the netdata python bind rndc module.
+
+Accepts the following attributes:
+
+- `conf_file` - Location of the netdata configuration file. Defaults to `/etc/netdata/python.d/bind_rndc.conf`.
+- `owner` - Owner of the configuration file. Defaults to `netdata`.
+- `group` - Group of the configuration file. Defaults to `netdata`.
+- `named_stats_path` - Location of the bind statistics file. Defaults to `nil` indicating that the default netdata location should be used.
+
+```ruby
+netdata_bind_rndc_conf 'customer_bind_config' do
+  named_stats_path 'custom path'
+end
+```
+
+To test using `ChefSpec` you can use the provided matcher `configure_netdata_bind_rndc_module`.
+
+```ruby
+it 'does something' do
+  expect(chef_run.converge(described_recipe)).to configure_netdata_bind_rndc_module('customer_bind_config')
+end
+```
+
 ### netdata_nginx_conf
 
-Configures the netdata python nginx configuration.
+Configures the netdata python nginx module.
 
 ```ruby
 jobs_config = {
