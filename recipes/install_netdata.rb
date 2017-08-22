@@ -75,14 +75,13 @@ else
 end
 
 # Update the netdata.conf if there's any configuration to include
-if node['netdata']['conf'].any?
-  template "/etc/netdata/netdata.conf" do
-    source "netdata.conf.erb"
-    mode 0664
-    owner node['netdata']['user']
-    group node['netdata']['group']
-    notifies :restart, "service[netdata]", :delayed
-  end
+template "/etc/netdata/netdata.conf" do
+  source "netdata.conf.erb"
+  mode 0664
+  owner node['netdata']['user']
+  group node['netdata']['group']
+  notifies :restart, "service[netdata]", :delayed
+  only_if { node['netdata']['conf'].any? }
 end
 
 service 'netdata' do
