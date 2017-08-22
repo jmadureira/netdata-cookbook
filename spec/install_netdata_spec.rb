@@ -80,6 +80,29 @@ describe 'netdata::install_netdata' do
           it 'does not run installer by default' do
             expect(chef_run).to_not run_execute('install')
           end
+
+          it 'does not restart service netdata' do
+            expect(chef_run).to_not restart_service('netdata')
+          end
+
+        end
+
+        describe version do
+          describe 'netdata.conf' do
+
+            it 'does not update the conf file if there are no configuration changes' do
+              chef_run = ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe)
+              expect(chef_run).to_not render_file('/etc/netdata/netdata.conf')
+            end
+
+            it 'updates the conf file if there are configuration changes' do
+              chef_run = ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
+                node.normal['netdata']['conf']['global'] = { history: 3996 }
+              end.converge(described_recipe)
+              expect(chef_run).to render_file('/etc/netdata/netdata.conf')
+            end
+
+          end
         end
 
         describe version do

@@ -53,11 +53,34 @@ Just include `netdata` in your node's `run_list`
 
 ## Attributes
 
+- `node['netdata']['user']` - Netdata user name. Since it is not possible to specify the user during installation do not change this FTTB. Defaults to netdata.
+- `node['netdata']['group']` - Netdata group name. Since it is not possible to specify the group during installation do not change this FTTB. Defaults to netdata.
+
 - `node['netdata']['source']['git_repository']` - Netdata git repository. Defaults to https://github.com/firehol/netdata.git
 - `node['netdata']['source']['git_revision']` - Netdata repository git reference. Can be a tag, branch or master. Defaults to master.
 - `node['netdata']['source']['directory']` - Local directory where the netdata repo will be cloned. Defaults to /tmp/netdata but should be replaced because most UNIX system periodically clean the /tmp directory.
 
 - `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
+
+- `node['netdata']['conf']` - Map to configure the netdata.conf file. Defaults to an empty map indicating that the netdata.conf should be left unchanged. Accepted configuration should be in the format `key => map`, for instance:
+
+```json
+{
+  "netdata": {
+    "conf": {
+      "global": {
+        "bind to": "localhost"
+      }
+    }
+  }
+}
+```
+... will create the following file:
+
+```
+[global]
+        bind to = localhost
+```
 
 ## Resources
 
