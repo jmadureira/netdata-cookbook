@@ -15,53 +15,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-case node['platform_family']
-when 'rhel', 'redhat', 'centos', 'amazon', 'scientific', 'oracle'
-  runtime_dependencies = %w(zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig)
-  if node['netdata']['plugins']['python']['mysql']['enabled']
-    runtime_dependencies << 'MySQL-python'
-  end
-  runtime_dependencies.each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
+Chef::Log.warn <<-EOF
+  Use of `recipe['netdata::install_netdata']` is now deprecated and will be removed in a future release.
+  `netdata_install` resource should be used instead.
+EOF
 
-  git node['netdata']['source']['directory'] do
-    repository node['netdata']['source']['git_repository']
-    reference node['netdata']['source']['git_revision']
-    action :sync
-    notifies :run, 'execute[install]', :immediately
-  end
+python_mysql_package =  case node['platform_family']
+                        when 'rhel', 'amazon', 'fedora'
+                          'MySQL-python'
+                        when 'debian'
+                          'python-mysqldb'
+                        else
+                          raise 'Unsupported platform family'
+                        end
 
-  execute 'install' do
-    cwd node['netdata']['source']['directory']
-    command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
-    action :nothing
-  end
-when 'ubuntu', 'debian'
-  runtime_dependencies = %w(zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config)
-  if node['netdata']['plugins']['python']['mysql']['enabled']
-    runtime_dependencies << 'python-mysqldb'
-  end
-  runtime_dependencies.each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
+package 'python_mysql' do
+  package_name python_mysql_package
+  only_if { node['netdata']['plugins']['python']['mysql']['enabled'] }
+end
 
-  git node['netdata']['source']['directory'] do
-    repository node['netdata']['source']['git_repository']
-    reference node['netdata']['source']['git_revision']
-    action :sync
-    notifies :run, 'execute[install]', :immediately
-  end
-
-  execute 'install' do
-    cwd node['netdata']['source']['directory']
-    command "#{node['netdata']['source']['directory']}/netdata-installer.sh --zlib-is-really-here --dont-wait"
-    action :nothing
-  end
-else
-  raise 'Unsupported platform family'
+netdata_install 'default' do
+  git_repository node['netdata']['source']['git_repository']
+  git_revision node['netdata']['source']['git_revision']
+  git_source_directory node['netdata']['source']['directory']
 end
