@@ -28,7 +28,7 @@ property :jobs, kind_of: Hash, default: {}
 
 action :create do
   Chef::Log.warn 'Use of the resource `netdata_nginx_conf` ' \
-            'is now deprecated and will be removed in a future release.' \
+            'is now deprecated and will be removed in a future release. ' \
             'The resource `netdata_python_plugin` should be used instead.'
 
   netdata_python_plugin 'nginx' do

@@ -16,9 +16,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Chef::Log.warn <<-EOF
-  Use of `recipe['netdata::default']` is now deprecated and will be removed in a future release.
-  `netdata_install` resource should be used instead.
-EOF
+Chef::Log.warn "Use of `recipe['netdata::default']` is now deprecated " \
+  'and will be removed in a future release. `netdata_install` ' \
+  'resource should be used instead.'
 
 include_recipe "#{cookbook_name}::install_netdata"

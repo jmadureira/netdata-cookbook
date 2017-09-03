@@ -31,13 +31,13 @@ include NetdataInstall::Helper
 action :install do
   if new_resource.git_source_directory == '/tmp/netdata'
     Chef::Log.warn 'Use of the default value for `git_source_directory` ' \
-              'is now deprecated and will be removed in a future release.' \
+              'is now deprecated and will be removed in a future release. ' \
               'The path `/opt/netdata.git` should be used instead.'
   end
 
   unless node['netdata'].empty?
     Chef::Log.warn "Use of `node['netdata']` attributes is now deprecated " \
-            'and will be removed in a future release.' \
+            'and will be removed in a future release. ' \
             '`netdata_install` resource should be used instead.'
   end
 

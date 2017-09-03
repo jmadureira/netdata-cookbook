@@ -16,10 +16,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Chef::Log.warn <<-EOF
-  Use of `recipe['netdata::install_netdata']` is now deprecated and will be removed in a future release.
-  `netdata_install` resource should be used instead.
-EOF
+Chef::Log.warn "Use of `recipe['netdata::install_netdata']` is now " \
+  'deprecated and will be removed in a future release. ' \
+  '`netdata_install` resource should be used instead.'
 
 python_mysql_package =  case node['platform_family']
                         when 'rhel', 'amazon', 'fedora'

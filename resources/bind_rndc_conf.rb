@@ -28,7 +28,7 @@ property :named_stats_path, kind_of: String, default: nil
 
 action :create do
   Chef::Log.warn 'Use of the resource `netdata_bind_rndc_conf` ' \
-            'is now deprecated and will be removed in a future release.' \
+            'is now deprecated and will be removed in a future release. ' \
             'The resource `netdata_python_plugin` should be used instead.'
 
   netdata_python_plugin 'bind_rndc' do
