@@ -1,39 +1,38 @@
-NetData Cookbook
-================
+# NetData Cookbook
 
 [![Build Status](https://travis-ci.org/sergiopena/netdata-cookbook.svg?branch=master)](https://travis-ci.org/sergiopena/netdata-cookbook)
 [![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.2.0-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
 [![Chef Version](http://img.shields.io/badge/chef-v12.9.38-orange.svg?style=flat)](https://www.chef.io)
 
-This cookbook provides a way to download and install NetData from FireHol, a real-time performance monitoring.
+This cookbook provides a way to download, install and configure NetData
+from FireHol, a real-time performance monitoring.
 
 Live demo: http://netdata.firehol.org
 
 Github: https://github.com/firehol/netdata
 
-Requirements
-------------
+## Requirements
 
 ### Platforms
 
-- Amazon
-- Centos => 6.7
-- Debian => 7.11
-- Fedora => 25
-- Ubuntu => 14.04
+- Amazon Linux 2013.09+
+- Centos 6.7+
+- Debian 7.11+
+- Fedora 25+
+- Ubuntu 14.04+
 
 ### Chef
 
-- Chef 12.0 or later
+- Chef 12.5+
 
 ### Cookbooks
 
-- `yum-epel`
-- `apt`
+- yum-epel
+- apt
 
 ## Usage
 
-This cookbook implements resources to install and manage NetData 
+This cookbook implements resources to install NetData and manage its 
 configuration files.
 
 ## Resources
@@ -47,12 +46,17 @@ netdata_install 'default' do
   git_repository 'https://github.com/firehol/netdata.git'
   git_revision 'master'
   git_source_directory '/tmp/netdata'
+  autoupdate true
 end
 ```
 
 - `git_repository` - Location of git repository to pull the NetData source.
 - `git_revision` - Tag/Branch/Commit to checkout.
 - `git_source_directory` - Location to sync the repository to on the server.
+- `install_path` - Change the location where NetData is installed.
+- `autoupdate` - Allow NetData to autoupdate itself via a cron entry.
+
+It's highly recommended to use a different path than `/tmp/netdata` for `git_source_directory` and in future versions the default path will change. This is encouraged because when `autoupdate` is set to true NetData will create a symbolic link from the source directory to cron.d and you don't want NetData to create a symbolic link to anything in `/tmp`
 
 ### netdata_config
 
@@ -63,6 +67,7 @@ Each name should be unique. (i.e. web, global)
 netdata_config 'web' do
   owner 'netdata'
   group 'netdata'
+  base_directory '/etc'
   configurations(
     'bind to' => 'localhost'
   )
@@ -78,6 +83,7 @@ Resulting file content (/etc/netdata/netdata.conf):
 
 - `owner` - User to own the file
 - `group` - Group to own the file
+- `base_directory` - Parent folder that holds the NetData configuration files.
 - `configurations` - Hash of key, value pairs for customizing NetData.
 
 ### netdata_python_plugin
@@ -88,6 +94,7 @@ Manages python plugin configuration files.
 netdata_python_plugin 'mysql' do
   owner 'netdata'
   group 'netdata'
+  base_directory '/etc'
   global_configuration(
     'retries' => 5
   )
@@ -116,9 +123,9 @@ tcp:
 
 - `owner` - User to own the file
 - `group` - Group to own the file
+- `base_directory` - Parent folder that holds the NetData configuration files.
 - `global_configuration` - Hash of global variables for the plugin.
 - `jobs` - Hash of jobs that tell NetData to pull statistics from.
-
 
 ### netdata_bind_rndc_conf
 

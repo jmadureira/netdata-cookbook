@@ -23,12 +23,14 @@ property :config_name, String, name_property: true
 property :owner, kind_of: String, default: 'netdata'
 property :group, kind_of: String, default: 'netdata'
 property :configurations, Hash, default: {}
+property :base_directory, String, default: '/etc'
 
 action :create do
   # As we're using the accumulator pattern we need to shove everything
   # into the root run context so each of the sections can find the parent
   with_run_context :root do
-    edit_resource(:template, '/etc/netdata/netdata.conf') do |new_resource|
+    edit_resource(:template,
+      "#{new_resource.base_directory}/netdata/netdata.conf") do |new_resource|
       cookbook 'netdata'
       source 'netdata.conf.erb'
       owner new_resource.owner
