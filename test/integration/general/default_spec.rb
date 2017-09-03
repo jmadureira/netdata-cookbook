@@ -2,16 +2,19 @@
 
 describe port(19999) do
   it { should be_listening }
-end
-
-describe processes('netdata') do
-  it { should exist }
+  its('processes') { should include 'netdata' }
+  its('addresses') { should include '0.0.0.0' }
+  its('protocols') { should include 'tcp' }
 end
 
 describe service('netdata') do
   it { should be_installed }
   it { should be_enabled }
   it { should be_running }
+end
+
+describe command("curl -s 'http://localhost:19999/api/v1/allmetrics'") do
+  its('stdout') { should match(/NETDATA_SYSTEM_CPU_SYSTEM=.*/) }
 end
 
 describe file('/etc/netdata/netdata.conf') do
