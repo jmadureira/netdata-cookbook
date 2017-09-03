@@ -1,7 +1,7 @@
 # All attributes are deprecated, please use the Netdata custom resources
 
 # Netdata source repository
-default['netdata']['source']['git_repository'] = 
+default['netdata']['source']['git_repository'] =
   'https://github.com/firehol/netdata.git'
 
 # Netdata source repository git reference.

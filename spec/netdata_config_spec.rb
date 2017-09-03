@@ -1,7 +1,6 @@
 # Cookbook Name:: netdata
-# Specs:: default_spec
+# Specs:: netdata_config
 #
-# Copyright 2016, Abiquo
 # Copyright 2017, Nick Willever
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +17,26 @@
 
 require 'spec_helper'
 
-describe 'netdata::default' do
-  context 'When all attributes are default' do
+describe 'netdata_test::default' do
+  context 'netdata_config custom configuration' do
     cached(:chef_run) do
       runner = ChefSpec::SoloRunner.new
       runner.converge(described_recipe)
     end
 
-    it 'includes install_netdata recipe' do
-      expect(chef_run).to include_recipe('netdata::install_netdata')
+    it 'configures netdata_config subsection: global' do
+      expect(chef_run).to create_netdata_config('global')
+        .with(configurations: { 'log directory' => '/var/log/netdata', 'history' => 3996 })
+    end
+
+    it 'configures netdata_config subsection: web' do
+      expect(chef_run).to create_netdata_config('web')
+        .with(configurations: { 'bind to' => 'localhost' })
+    end
+
+    it 'configures netdata_config subsection: plugin:proc:/proc/meminfo' do
+      expect(chef_run).to create_netdata_config('plugin:proc:/proc/meminfo')
+        .with(configurations: { 'committed memory' => 'yes', 'writeback memory' => 'yes' })
     end
 
     it 'converges successfully' do

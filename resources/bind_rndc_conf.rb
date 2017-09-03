@@ -21,22 +21,22 @@ resource_name :netdata_bind_rndc_conf
 default_action :create
 
 property :conf_file, kind_of: String,
-  default: '/etc/netdata/python.d/bind_rndc.conf'
+                     default: '/etc/netdata/python.d/bind_rndc.conf'
 property :owner, kind_of: String, default: 'netdata'
 property :group, kind_of: String, default: 'netdata'
 property :named_stats_path, kind_of: String, default: nil
 
 action :create do
-  Chef::Log.warn "Use of the resource `netdata_bind_rndc_conf` " \
-            "is now deprecated and will be removed in a future release." \
-            "The resource `netdata_python_plugin` should be used instead."
+  Chef::Log.warn 'Use of the resource `netdata_bind_rndc_conf` ' \
+            'is now deprecated and will be removed in a future release.' \
+            'The resource `netdata_python_plugin` should be used instead.'
 
   netdata_python_plugin 'bind_rndc' do
     owner new_resource.owner
     group new_resource.group
     jobs(
       'local' => {
-        'named_stats_path' => new_resource.named_stats_path 
+        'named_stats_path' => new_resource.named_stats_path,
       }
     )
   end

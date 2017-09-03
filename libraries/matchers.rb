@@ -31,15 +31,15 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_nginx_conf, :create, resource_name)
   end
 
-  def configure_netdata_install_module(resource_name)
+  def install_netdata_install(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_install, :install, resource_name)
   end
 
-  def configure_netdata_config_module(resource_name)
+  def create_netdata_config(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_config, :create, resource_name)
   end
 
-  def configure_netdata_python_plugin_module(resource_name)
+  def create_netdata_python_plugin(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_python_plugin, :create, resource_name)
   end
 end

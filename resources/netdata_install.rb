@@ -20,7 +20,7 @@ resource_name :netdata_install
 default_action :install
 
 property :git_repository, kind_of: String,
-  default: 'https://github.com/firehol/netdata.git'
+                          default: 'https://github.com/firehol/netdata.git'
 property :git_revision, kind_of: String, default: 'include-missing-assets'
 property :git_source_directory, kind_of: String, default: '/tmp/netdata'
 property :install_path, kind_of: String, default: ''
@@ -30,15 +30,15 @@ include NetdataInstall::Helper
 
 action :install do
   if new_resource.git_source_directory == '/tmp/netdata'
-    Chef::Log.warn "Use of the default value for `git_source_directory` " \
-              "is now deprecated and will be removed in a future release." \
-              "The path `/opt/netdata.git` should be used instead."
+    Chef::Log.warn 'Use of the default value for `git_source_directory` ' \
+              'is now deprecated and will be removed in a future release.' \
+              'The path `/opt/netdata.git` should be used instead.'
   end
 
-  if !node['netdata'].empty?
+  unless node['netdata'].empty?
     Chef::Log.warn "Use of `node['netdata']` attributes is now deprecated " \
-            "and will be removed in a future release." \
-            "`netdata_install` resource should be used instead."
+            'and will be removed in a future release.' \
+            '`netdata_install` resource should be used instead.'
   end
 
   case node['platform_family']
@@ -78,9 +78,9 @@ action :install do
     not_if { autoupdate_enabled_on_system? }
     not_if { netdata_installed? }
   end
-  
+
   service 'netdata' do
-    supports :status => true, :restart => true, :reload => true
+    supports status: true, restart: true, reload: true
     action [:start, :enable]
   end
 end

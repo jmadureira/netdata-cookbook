@@ -26,28 +26,26 @@ module NetdataInstall
     end
 
     def autoupdate_enabled_on_system?
-      File.exists?('/etc/cron.daily/netdata-updater')
+      ::File.exist?('/etc/cron.daily/netdata-updater')
     end
 
     def netdata_installed?
       path = install_path.empty? ? '' : "#{install_path}/netdata"
-      File.exists?("#{path}/usr/sbin/netdata")
+      ::File.exist?("#{path}/usr/sbin/netdata")
     end
 
     def compile_packages
-      packages = []
-
       packages = case node['platform_family']
-                  when 'rhel', 'amazon'
-                    %w(zlib-devel libuuid-devel libmnl-devel nc pkgconfig)
-                  when 'debian'
-                    %w(zlib1g-dev uuid-dev libmnl-dev netcat pkg-config)
-                  when 'fedora'
-                    %w(zlib-devel libuuid-devel libmnl-devel autoconf-archive
-                    pkgconfig nc findutils)
-                  else
-                    raise 'Unsupported platform family'
-                  end
+                 when 'rhel', 'amazon'
+                   %w(zlib-devel libuuid-devel libmnl-devel nc pkgconfig)
+                 when 'debian'
+                   %w(zlib1g-dev uuid-dev libmnl-dev netcat pkg-config)
+                 when 'fedora'
+                   %w(zlib-devel libuuid-devel libmnl-devel autoconf-archive
+                      pkgconfig nc findutils)
+                 else
+                   raise 'Unsupported platform family'
+                 end
       packages + common_compile_packages
     end
 

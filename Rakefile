@@ -1,7 +1,7 @@
 require 'foodcritic'
 require 'kitchen'
 require 'rspec/core/rake_task'
-require "cookstyle"
+require 'cookstyle'
 require 'rubocop/rake_task'
 
 namespace :style do

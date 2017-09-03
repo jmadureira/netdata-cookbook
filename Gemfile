@@ -17,4 +17,3 @@ group :devel do
   gem 'cookstyle'
   gem 'pry-byebug'
 end
-

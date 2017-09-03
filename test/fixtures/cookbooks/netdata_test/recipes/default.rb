@@ -30,7 +30,7 @@ netdata_python_plugin 'mysql' do
     'tcp' => {
       'name' => 'local',
       'host' => 'localhost',
-      'port' => 3306   
+      'port' => 3306,
     }
   )
 end
@@ -41,13 +41,21 @@ node.override['netdata']['plugins']['python'] \
   ['nginx']['config']['localhost']['name'] = 'local'
 node.override['netdata']['plugins']['python'] \
   ['nginx']['config']['localhost']['url'] = 'http://localhost/stub_status'
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localipv4']['name'] = 'local'
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localipv4']['url'] = 'http://127.0.0.1/stub_status'
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localipv6']['name'] = 'local'
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localipv6']['url'] = 'http://::1/stub_status'
 
 netdata_nginx_conf 'default_config' do
   jobs node['netdata']['plugins']['python']['nginx']['config']
 end
 
 node.override['netdata']['plugins']['python']['bind_rndc']['config'] \
-  ['named_stats_path'] = '/var/log/bind/named.stats'
+  ['named_stats_path'] = '/custom/path'
 
 netdata_bind_rndc_conf 'default_bind_rndc_config' do
   named_stats_path node['netdata']['plugins']['python'] \

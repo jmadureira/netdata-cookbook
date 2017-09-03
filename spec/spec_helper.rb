@@ -18,11 +18,28 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-ChefSpec::Coverage.start!
-
 RSpec.configure do |config|
-  # config.platform = 'centos'
-  # config.version = '6.5'
-  # Avoid warnings caused by http://tickets.chef.io/browse/CHEF-3694
-  config.log_level = :error
+  config.platform = 'ubuntu'
+  config.version = '14.04'
+  config.formatter = 'documentation'
+  config.order = 'random'
+  config.color = true
+  config.fail_fast = true
 end
+
+# silence!!
+#
+# all logging
+Chef::Log.init('/dev/null')
+#
+# 'warning: already initialized constant'
+$VERBOSE = nil
+#
+# deprecation warnings
+module Kernel
+  def deprecated(*)
+    # noop
+  end
+end
+
+ChefSpec::Coverage.start!

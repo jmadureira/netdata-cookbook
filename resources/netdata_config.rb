@@ -30,7 +30,7 @@ action :create do
   with_run_context :root do
     edit_resource(:template, '/etc/netdata/netdata.conf') do |new_resource|
       cookbook 'netdata'
-      source "netdata.conf.erb"
+      source 'netdata.conf.erb'
       owner new_resource.owner
       group new_resource.group
       variables['configurations'] ||= {}

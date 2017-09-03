@@ -2,6 +2,7 @@
 # Specs:: install_netdata_spec
 #
 # Copyright 2016, Abiquo
+# Copyright 2017, Nick Willever
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,92 +18,109 @@
 
 require 'spec_helper'
 
+shared_examples_for :install do
+  it 'runs the netdata install custom resource' do
+    expect(chef_run).to install_netdata_install('default')
+  end
+
+  it 'installs packages for NetData plugins' do
+    expect(chef_run).to install_package('plugin_packages')
+  end
+
+  it 'checks out NetData git repository' do
+    expect(chef_run).to sync_git('/tmp/netdata')
+  end
+
+  it 'installs the NetData service' do
+    expect(chef_run).to run_execute('install')
+  end
+
+  it 'restarts NetData service on install' do
+    resource = chef_run.execute('install')
+    expect(resource).to notify('service[netdata]').to(:restart).delayed
+  end
+
+  it 'enables and starts the NetData service' do
+    expect(chef_run).to start_service('netdata')
+  end
+
+  it 'converges successfully' do
+    expect { chef_run }.to_not raise_error
+  end
+end
+
 describe 'netdata::install_netdata' do
-  platform_check = {
-    'centos' => {
-      versions: ['6.7'],
-      install_packages: %w(zlib-devel libuuid-devel libmnl-devel gcc make git autoconf autogen automake pkgconfig),
-      log_packages: %w(gcc make git autoconf autogen automake pkgconfig),
-      mysql_packages: %w(MySQL-python)
-    },
-    'ubuntu' => {
-      versions: ['14.04'],
-      install_packages: %w(zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autogen automake pkg-config),
-      log_packages: %w(gcc make git autoconf autogen automake pkg-config),
-      mysql_packages: %w(python-mysqldb)
-    }
-  }
-
-  platform_check.each do |platform, options|
-    describe platform do
-      options[:versions].each do |version|
-        describe version do
-          describe 'git configuration' do
-            let(:git_reference) { '1.3.0' }
-            let(:git_repository) { 'https://github.com/random_dude/netdata.git' }
-            let(:git_directory) { '/var/tmp/new_directory' }
-            let(:chef_run) {
-              ChefSpec::SoloRunner.new(platform: platform, version: version) do |node|
-                node.normal['netdata']['source']['git_repository'] = git_repository
-                node.normal['netdata']['source']['git_revision'] = git_reference
-                node.normal['netdata']['source']['directory'] = git_directory
-              end.converge(described_recipe)
-            }
-
-            it 'uses a configurable git reference' do
-              expect(chef_run).to sync_git(git_directory).with(reference: git_reference)
-            end
-
-            it 'uses a configurable git repository' do
-              expect(chef_run).to sync_git(git_directory).with(repository: git_repository)
-            end
-          end
-        end
-
-        describe version do
-          let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version).converge(described_recipe) }
-
-          options[:install_packages].each do |pkg|
-            it "installs the #{pkg} package" do
-              expect(chef_run).to install_package(pkg)
-            end
-          end
-
-          it 'clones github repo on default folder' do
-            expect(chef_run).to sync_git(chef_run.node['netdata']['source']['directory']).with(reference: 'master')
-          end
-
-          it 'notifies the installer execution' do
-            git_command = chef_run.git(chef_run.node['netdata']['source']['directory'])
-            expect(git_command).to notify('execute[install]')
-          end
-
-          it 'does not run installer by default' do
-            expect(chef_run).to_not run_execute('install')
-          end
-        end
-
-        describe version do
-          describe 'python plugin' do
-            describe 'mysql module' do
-              let(:chef_run) { ChefSpec::SoloRunner.new(platform: platform, version: version) }
-
-              options[:mysql_packages].each do |pkg|
-                it "does not install #{pkg} package dependency by default" do
-                  chef_run.converge(described_recipe)
-                  expect(chef_run).to_not install_package(pkg)
-                end
-
-                it "installs the #{pkg} package dependency" do
-                  chef_run.node.normal['netdata']['plugins']['python']['mysql']['enabled'] = true
-                  chef_run.converge(described_recipe)
-                  expect(chef_run).to install_package(pkg)
-                end
-              end
-            end
-          end
-        end
-      end
+  context 'Ubuntu' do
+    cached(:chef_run) do
+      ChefSpec::SoloRunner.new(step_into: ['netdata_install']) do |node|
+        node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
+      end.converge(described_recipe)
     end
+
+    it 'installs the python mysql package for NetData mysql plugin' do
+      expect(chef_run).to install_package('python_mysql').with(package_name: 'python-mysqldb')
+    end
+
+    it 'installs compile packages' do
+      expect(chef_run).to_not install_package('compile_packages')
+        .with(package_name: %w(zlib-devel libuuid-devel libmnl-devel nc pkgconfig autoconf autogen automake gcc make))
+    end
+
+    it 'includes apt cookbook' do
+      expect(chef_run).to include_recipe('apt')
+    end
+
+    it_behaves_like :install
+  end
+end
+
+shared_examples_for :mysql_plugin do
+  it 'installs the python mysql package for NetData mysql plugin' do
+    expect(chef_run).to install_package('python_mysql').with(package_name: 'MySQL-python')
+  end
+end
+
+describe 'netdata::install_netdata' do
+  context 'CentOS' do
+    cached(:chef_run) do
+      ChefSpec::SoloRunner.new(
+        platform: 'centos', version: 6.7,
+        step_into: ['netdata_install']) do |node|
+        node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
+      end.converge(described_recipe)
+    end
+
+    it 'installs compile packages' do
+      expect(chef_run).to_not install_package('compile_packages')
+        .with(package_name: %w(zlib-devel libuuid-devel libmnl-devel nc pkgconfig autoconf autogen automake gcc make))
+    end
+
+    it 'includes yum-epel cookbook' do
+      expect(chef_run).to include_recipe('yum-epel')
+    end
+
+    it_behaves_like :install
+    it_behaves_like :mysql_plugin
+  end
+end
+
+describe 'netdata::install_netdata' do
+  context 'Fedora' do
+    cached(:chef_run) do
+      ChefSpec::SoloRunner.new(
+        platform: 'fedora', version: 25,
+        step_into: ['netdata_install']) do |node|
+        node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
+      end.converge(described_recipe)
+    end
+
+    it 'installs compile packages' do
+      expect(chef_run).to_not install_package('compile_packages')
+        .with(package_name: %w(zlib-devel
+                               libuuid-devel libmnl-devel autoconf-archive pkgconfig nc findutils autoconf autogen automake gcc make))
+    end
+
+    it_behaves_like :install
+    it_behaves_like :mysql_plugin
   end
 end

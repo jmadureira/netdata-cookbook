@@ -33,9 +33,9 @@ action :create do
     group new_resource.group
     variables(
       config_name: new_resource.config_name,
-      global_configuration: 
+      global_configuration:
       (new_resource.global_configuration.empty? ? '' : new_resource.global_configuration.to_yaml),
-      jobs: (new_resource.jobs.empty? ? '' : new_resource.jobs.to_yaml),
+      jobs: (new_resource.jobs.empty? ? '' : new_resource.jobs.to_yaml)
     )
   end
 end
