@@ -1,0 +1,24 @@
+# netdata python.d.plugin configuration for <%= @config_name -%>
+#
+# This file is in YaML format. Generally the format is:
+#
+# name: value
+#
+# There are 2 sections:
+#  - global variables
+#  - one or more JOBS
+#
+# JOBS allow you to collect values from multiple sources.
+# Each source will have its own set of charts.
+
+# ----------------------------------------------------------------------
+# Global Variables
+# These variables set the defaults for all JOBs, however each JOB
+# may define its own, overriding the defaults.
+
+<%= @global_configuration.gsub(/---.*\n/,'') -%>
+
+# ----------------------------------------------------------------------
+# JOBS (data collection sources)
+
+<%= @jobs.gsub(/---.*\n/,'') -%>

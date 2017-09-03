@@ -2,6 +2,7 @@
 # Library:: matchers
 #
 # Copyright 2016, Abiquo
+# Copyright 2017, Nick Willever
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,6 +19,9 @@
 if defined?(ChefSpec)
   ChefSpec.define_matcher :netdata_bind_rndc_conf
   ChefSpec.define_matcher :netdata_nginx_conf
+  ChefSpec.define_matcher :netdata_install
+  ChefSpec.define_matcher :netdata_config
+  ChefSpec.define_matcher :netdata_python_plugin
 
   def configure_netdata_bind_rndc_module(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_bind_rndc_conf, :create, resource_name)
@@ -25,5 +29,17 @@ if defined?(ChefSpec)
 
   def configure_netdata_nginx_module(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_nginx_conf, :create, resource_name)
+  end
+
+  def configure_netdata_install_module(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netdata_install, :install, resource_name)
+  end
+
+  def configure_netdata_config_module(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netdata_config, :create, resource_name)
+  end
+
+  def configure_netdata_python_plugin_module(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netdata_python_plugin, :create, resource_name)
   end
 end
