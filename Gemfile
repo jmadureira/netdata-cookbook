@@ -3,17 +3,18 @@ source 'https://rubygems.org'
 gem 'chef', '~> 12.9.38'
 gem 'berkshelf'
 
-gem 'foodcritic', '~> 6.3.0'
-gem 'chefspec', '~> 4.4.0'
+gem 'foodcritic'
+gem 'chefspec'
 
 group :integration do
-  gem 'serverspec', '~> 2.32.0'
-  gem 'test-kitchen', '~> 1.7.3'
-  gem 'kitchen-vagrant', '~> 0.20.0'
+  gem 'test-kitchen'
+  gem 'kitchen-inspec'
+  gem 'kitchen-vagrant'
 end
 
 group :devel do
   gem 'rubocop'
+  gem 'cookstyle'
   gem 'pry-byebug'
 end
 
