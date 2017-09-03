@@ -3,7 +3,7 @@
 describe port(19999) do
   it { should be_listening }
   its('processes') { should include 'netdata' }
-  its('addresses') { should include '0.0.0.0' }
+  its('addresses') { should include '127.0.0.1' }
   its('protocols') { should include 'tcp' }
 end
 

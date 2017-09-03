@@ -39,5 +39,10 @@ action :create do
       (new_resource.global_configuration.empty? ? '' : new_resource.global_configuration.to_yaml),
       jobs: (new_resource.jobs.empty? ? '' : new_resource.jobs.to_yaml)
     )
+    notifies :restart, 'service[netdata]', :delayed
+  end
+
+  service 'netdata' do
+    action :nothing
   end
 end
