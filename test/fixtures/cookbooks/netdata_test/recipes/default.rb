@@ -1,3 +1,55 @@
+# convert this to the netdata_install resource, once
+# netdata::{default,netdata_install} are removed
+include_recipe 'netdata'
+
+netdata_config 'global' do
+  configurations(
+    'log directory' => '/var/log/netdata',
+    'history' => 3996
+  )
+end
+
+netdata_config 'web' do
+  configurations(
+    'bind to' => 'localhost'
+  )
+end
+
+netdata_config 'plugin:proc:/proc/meminfo' do
+  configurations(
+    'committed memory' => 'yes',
+    'writeback memory' => 'yes'
+  )
+end
+
+netdata_python_plugin 'mysql' do
+  global_configuration(
+    'retries' => 5
+  )
+  jobs(
+    'tcp' => {
+      'name' => 'local',
+      'host' => 'localhost',
+      'port' => 3306   
+    }
+  )
+end
+
+# remove all code below once these resources have been removed in
+# favor of netdata_python_plugin
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localhost']['name'] = 'local'
+node.override['netdata']['plugins']['python'] \
+  ['nginx']['config']['localhost']['url'] = 'http://localhost/stub_status'
+
 netdata_nginx_conf 'default_config' do
   jobs node['netdata']['plugins']['python']['nginx']['config']
+end
+
+node.override['netdata']['plugins']['python']['bind_rndc']['config'] \
+  ['named_stats_path'] = '/var/log/bind/named.stats'
+
+netdata_bind_rndc_conf 'default_bind_rndc_config' do
+  named_stats_path node['netdata']['plugins']['python'] \
+    ['bind_rndc']['config']['named_stats_path']
 end
