@@ -44,5 +44,7 @@ action :create do
 
   service 'netdata' do
     action :nothing
+    retries 5
+    retry_delay 10
   end
 end

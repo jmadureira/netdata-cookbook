@@ -72,11 +72,6 @@ netdata_config 'web' do
     'bind to' => 'localhost'
   )
 end
-
-service 'netdata' do
-  action :nothing
-  subscribes :restart, 'netdata_config[web]', :delayed
-end
 ```
 
 Resulting file content (/etc/netdata/netdata.conf):
@@ -91,8 +86,7 @@ Resulting file content (/etc/netdata/netdata.conf):
 - `base_directory` - Parent folder that holds the NetData configuration files.
 - `configurations` - Hash of key, value pairs for customizing NetData.
 
-This resource will not restart the service automatically, please add that to
-your cookbook.
+This resource will restart the NetData service automatically.
 
 ### netdata_python_plugin
 

@@ -2,13 +2,6 @@
 # netdata::{default,netdata_install} are removed
 include_recipe 'netdata'
 
-service 'netdata' do
-  action :nothing
-  subscribes :restart, 'netdata_config[global]', :delayed
-  subscribes :restart, 'netdata_config[web]', :delayed
-  subscribes :restart, 'netdata_config[plugin:proc:/proc/meminfo]', :delayed
-end
-
 netdata_config 'global' do
   configurations(
     'log directory' => '/var/log/netdata',
