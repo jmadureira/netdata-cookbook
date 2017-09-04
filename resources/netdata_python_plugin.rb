@@ -24,10 +24,10 @@ property :owner, kind_of: String, default: 'netdata'
 property :group, kind_of: String, default: 'netdata'
 property :global_configuration, Hash, default: {}
 property :jobs, Hash, default: {}
-property :base_directory, String, default: '/etc'
+property :base_directory, String, default: ''
 
 action :create do
-  template "#{new_resource.base_directory}/netdata" \
+  template "#{new_resource.base_directory}/etc/netdata" \
     "/python.d/#{new_resource.config_name}.conf" do
     cookbook 'netdata'
     source 'python_plugin.conf.erb'
