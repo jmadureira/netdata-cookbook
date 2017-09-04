@@ -44,11 +44,6 @@ action :create do
 
       action :nothing
       delayed_action :create
-      notifies :restart, 'service[netdata]', :delayed
-    end
-
-    service 'netdata' do
-      action :nothing
     end
   end
 end
