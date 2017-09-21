@@ -18,7 +18,7 @@
 
 Chef::Log.warn "Use of `recipe['netdata::install_netdata']` is now " \
   'deprecated and will be removed in a future release. ' \
-  '`netdata_install` resource should be used instead.'
+  "`netdata_install` resource or recipe['netdata::default'] should be used."
 
 python_mysql_package =  case node['platform_family']
                         when 'rhel', 'amazon', 'fedora'

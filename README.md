@@ -35,6 +35,16 @@ Github: https://github.com/firehol/netdata
 This cookbook implements resources to install NetData and manage its 
 configuration files.
 
+## Recipies
+
+### default
+
+Installs NetData using the netdata_install resource with default parameters.
+
+### install_netdata
+
+Deprecated, please use default recipe or netdata_install resource.
+
 ## Resources
 
 ### netdata_install
