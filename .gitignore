@@ -1,5 +1,17 @@
+.vagrant
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
 *.lock
-*.swp
+
+# Bundler
+bin/*
+.bundle/*
+
 .kitchen/
 .kitchen.local.yml
+
 .ruby-version

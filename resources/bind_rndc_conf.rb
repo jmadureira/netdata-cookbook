@@ -2,6 +2,7 @@
 # Resources:: netdata_bind_rndc_conf
 #
 # Copyright 2016, Abiquo
+# Copyright 2017, Nick Willever
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,21 +20,24 @@ resource_name :netdata_bind_rndc_conf
 
 default_action :create
 
-attribute :conf_file,        kind_of: String, default: '/etc/netdata/python.d/bind_rndc.conf'
-attribute :owner,            kind_of: String, default: 'netdata'
-attribute :group,            kind_of: String, default: 'netdata'
-attribute :named_stats_path, kind_of: String, default: nil
+property :conf_file, kind_of: String,
+                     default: '/etc/netdata/python.d/bind_rndc.conf'
+property :owner, kind_of: String, default: 'netdata'
+property :group, kind_of: String, default: 'netdata'
+property :named_stats_path, kind_of: String, default: nil
 
 action :create do
-  t = template new_resource.conf_file do
-    cookbook 'netdata'
-    source 'bind_rndc.conf.erb'
-    mode 0644
+  Chef::Log.warn 'Use of the resource `netdata_bind_rndc_conf` ' \
+            'is now deprecated and will be removed in a future release. ' \
+            'The resource `netdata_python_plugin` should be used instead.'
+
+  netdata_python_plugin 'bind_rndc' do
     owner new_resource.owner
     group new_resource.group
-    variables(
-      :named_stats_path => new_resource.named_stats_path
+    jobs(
+      'local' => {
+        'named_stats_path' => new_resource.named_stats_path,
+      }
     )
   end
-  new_resource.updated_by_last_action(t.updated_by_last_action?)
 end

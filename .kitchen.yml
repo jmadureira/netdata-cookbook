@@ -1,6 +1,8 @@
 ---
 driver:
   name: vagrant
+  customize:
+    memory: 1024
   # network:
   #  - ["public_network", { bridge: 'en0: Ethernet' } ]
   #  - ["public_network", { bridge: 'en1: Wi-Fi (AirPort)' } ]
@@ -8,36 +10,29 @@ driver:
 provisioner:
   name: chef_zero
 
+verifier:
+  name: inspec
+  format: documentation
+
 platforms:
   - name: centos-6.7
-    driver_config:
-      customize:
-        memory: 1024
   - name: centos-7.2
-    driver_config:
-      customize:
-        memory: 1024
+  - name: fedora-25
+  - name: debian-7.11
+    # newer versions break on this platform
+    provisioner:
+      require_chef_omnibus: '13.0.113'
+  - name: debian-8.6
   - name: ubuntu-14.04
-    run_list:
-      - recipe[apt]
-    driver_config:
-      customize:
-        memory: 1024
   - name: ubuntu-16.04
-    run_list:
-      - recipe[apt]
-    driver_config:
-      customize:
-        memory: 1024
 
 suites:
   - name: general
     run_list:
-      - recipe[netdata]
-
+      - recipe[netdata_test]
   - name: general-chef12
     run_list:
-      - recipe[netdata]
+      - recipe[netdata_test]
     provisioner:
       require_chef_omnibus: '12.20.3'
     verifier:

@@ -1,118 +1,153 @@
-NetData Cookbook
-================
+# NetData Cookbook
 
 [![Build Status](https://travis-ci.org/sergiopena/netdata-cookbook.svg?branch=master)](https://travis-ci.org/sergiopena/netdata-cookbook)
-[![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.1.9-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
+[![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.2.0-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
 [![Chef Version](http://img.shields.io/badge/chef-v12.9.38-orange.svg?style=flat)](https://www.chef.io)
 
-This cookbook provides a way to download and install NetData from FireHol, a real-time performance monitoring.
+This cookbook provides a way to download, install and configure NetData
+from FireHol, a real-time performance monitoring.
 
 Live demo: http://netdata.firehol.org
 
 Github: https://github.com/firehol/netdata
 
-Requirements
-------------
+## Requirements
 
 ### Platforms
 
-- Centos => 6.7
-- Ubuntu > 14.04
+- Amazon Linux 2013.09+
+- Centos 6.7+
+- Debian 7.11+
+- Fedora 25+
+- Ubuntu 14.04+
 
 ### Chef
 
-- Chef 12.0 or later
+- Chef 12.5+
 
 ### Cookbooks
 
-- `yum-epel` = 0.7.0
-
-Recipes
--------
-
-### netdata::default
-
-This would install NetData on supported platforms. At the moment this product does not have any distribution packages and the only supported installation method is to compile sources.
-
-NetData cookbook will install required dependencies and after compilation succeeds those deps will be removed, except those packages that already were installed on the server prior to chef run.
+- yum-epel
+- apt
 
 ## Usage
 
-### netdata::default
+This cookbook implements resources to install NetData and manage its 
+configuration files.
 
-Just include `netdata` in your node's `run_list`
+## Recipies
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[netdata]"
-  ]
-}
-```
+### default
 
-## Attributes
+Installs NetData using the netdata_install resource with default parameters.
 
-- `node['netdata']['source']['git_repository']` - Netdata git repository. Defaults to https://github.com/firehol/netdata.git
-- `node['netdata']['source']['git_revision']` - Netdata repository git reference. Can be a tag, branch or master. Defaults to master.
-- `node['netdata']['source']['directory']` - Local directory where the netdata repo will be cloned. Defaults to /tmp/netdata but should be replaced because most UNIX system periodically clean the /tmp directory.
+### install_netdata
 
-- `node['netdata']['plugins']['python']['mysql']['enabled']` - False by default. If set to true installs all needed python dependencies to connect to MySQL.
+Deprecated, please use default recipe or netdata_install resource.
 
 ## Resources
 
+### netdata_install
+
+Installs NetData from source on supported platforms.
+
+```rb
+netdata_install 'default' do
+  git_repository 'https://github.com/firehol/netdata.git'
+  git_revision 'master'
+  git_source_directory '/tmp/netdata'
+  autoupdate true
+end
+```
+
+- `git_repository` - Location of git repository to pull the NetData source.
+- `git_revision` - Tag/Branch/Commit to checkout.
+- `git_source_directory` - Location to sync the repository to on the server.
+- `install_path` - Change the location where NetData is installed.
+- `autoupdate` - Allow NetData to autoupdate itself via a cron entry.
+
+It's highly recommended to use a different path than `/tmp/netdata` for `git_source_directory` and in future versions the default path will change. This is encouraged because when `autoupdate` is set to true NetData will create a symbolic link from the source directory to cron.d and you don't want NetData to create a symbolic link to anything in `/tmp`
+
+### netdata_config
+
+Manages the main netdata.conf file. Call this as many times as needed.
+Each name should be unique. (i.e. web, global)
+
+```rb
+netdata_config 'web' do
+  owner 'netdata'
+  group 'netdata'
+  base_directory '/etc'
+  configurations(
+    'bind to' => 'localhost'
+  )
+end
+```
+
+Resulting file content (/etc/netdata/netdata.conf):
+
+```sh
+[web]
+  bind to = localhost
+```
+
+- `owner` - User to own the file
+- `group` - Group to own the file
+- `base_directory` - Parent folder that holds the NetData configuration files.
+- `configurations` - Hash of key, value pairs for customizing NetData.
+
+This resource will restart the NetData service automatically.
+
+### netdata_python_plugin
+
+Manages python plugin configuration files.
+
+```rb
+netdata_python_plugin 'mysql' do
+  owner 'netdata'
+  group 'netdata'
+  base_directory '/etc'
+  global_configuration(
+    'retries' => 5
+  )
+  jobs(
+    'tcp' => {
+      'name' => 'local',
+      'host' => 'localhost',
+      'port' => 3306   
+    }
+  )
+end
+```
+
+Resulting file content (/etc/netdata/python.d/mysql.conf):
+
+```sh
+# GLOBAL
+retries: 5
+
+# JOBS
+tcp:
+  name: local
+  host: localhost
+  port: 3306
+```
+
+- `owner` - User to own the file
+- `group` - Group to own the file
+- `base_directory` - Parent folder that holds the NetData configuration files.
+- `global_configuration` - Hash of global variables for the plugin.
+- `jobs` - Hash of jobs that tell NetData to pull statistics from.
+
+This resource will restart the NetData service automatically.
+
 ### netdata_bind_rndc_conf
 
-Configures the netdata python bind rndc module.
-
-Accepts the following attributes:
-
-- `conf_file` - Location of the netdata configuration file. Defaults to `/etc/netdata/python.d/bind_rndc.conf`.
-- `owner` - Owner of the configuration file. Defaults to `netdata`.
-- `group` - Group of the configuration file. Defaults to `netdata`.
-- `named_stats_path` - Location of the bind statistics file. Defaults to `nil` indicating that the default netdata location should be used.
-
-```ruby
-netdata_bind_rndc_conf 'customer_bind_config' do
-  named_stats_path 'custom path'
-end
-```
-
-To test using `ChefSpec` you can use the provided matcher `configure_netdata_bind_rndc_module`.
-
-```ruby
-it 'does something' do
-  expect(chef_run.converge(described_recipe)).to configure_netdata_bind_rndc_module('customer_bind_config')
-end
-```
+Deprecated, please use netdata_python_plugin
 
 ### netdata_nginx_conf
 
-Configures the netdata python nginx module.
-
-```ruby
-jobs_config = {
-  'localhost' => {
-    'name' => 'local',
-    'url' => 'http://localhost/stub_status'
-  },
-  'localipv4' => {
-    'name' => 'local',
-    'url' => 'http://127.0.0.1/stub_status'
-  }
-}
-netdata_nginx_conf 'default_config' do
-  jobs jobs_config
-end
-```
-
-To test using `ChefSpec` you can use the provided matcher `configure_netdata_nginx_module`.
-
-```ruby
-it 'does something' do
-  expect(chef_run.converge(described_recipe)).to configure_netdata_nginx_module('some_config')
-end
-```
+Deprecated, please use netdata_python_plugin
 
 ## Contributing
 
@@ -128,3 +163,4 @@ end
 Authors:
 * Sergio Pena https://github.com/sergiopena
 * João Madureira https://github.com/jmadureira
+* Nick Willever https://github.com/nictrix

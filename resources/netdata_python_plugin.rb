@@ -1,7 +1,6 @@
 # Cookbook Name:: netdata
-# Resources:: netdata_nginx_conf
+# Resources:: netdata_python_plugin
 #
-# Copyright 2016, Abiquo
 # Copyright 2017, Nick Willever
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +15,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-resource_name :netdata_nginx_conf
+resource_name :netdata_python_plugin
 
 default_action :create
 
-property :conf_file, kind_of: String,
-                     default: '/etc/netdata/python.d/nginx.conf'
+property :config_name, String, name_property: true
 property :owner, kind_of: String, default: 'netdata'
 property :group, kind_of: String, default: 'netdata'
-property :jobs, kind_of: Hash, default: {}
+property :global_configuration, Hash, default: {}
+property :jobs, Hash, default: {}
+property :base_directory, String, default: ''
 
 action :create do
-  Chef::Log.warn 'Use of the resource `netdata_nginx_conf` ' \
-            'is now deprecated and will be removed in a future release. ' \
-            'The resource `netdata_python_plugin` should be used instead.'
-
-  netdata_python_plugin 'nginx' do
+  template "#{new_resource.base_directory}/etc/netdata" \
+    "/python.d/#{new_resource.config_name}.conf" do
+    cookbook 'netdata'
+    source 'python_plugin.conf.erb'
     owner new_resource.owner
     group new_resource.group
-    jobs(new_resource.jobs.to_h)
+    variables(
+      config_name: new_resource.config_name,
+      global_configuration:
+      (new_resource.global_configuration.empty? ? '' : new_resource.global_configuration.to_yaml),
+      jobs: (new_resource.jobs.empty? ? '' : new_resource.jobs.to_yaml)
+    )
+    notifies :restart, 'service[netdata]', :delayed
+  end
+
+  service 'netdata' do
+    action :nothing
+    retries 5
+    retry_delay 10
   end
 end
