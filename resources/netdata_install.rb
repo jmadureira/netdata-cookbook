@@ -25,6 +25,7 @@ property :git_revision, kind_of: String, default: 'include-missing-assets'
 property :git_source_directory, kind_of: String, default: '/tmp/netdata'
 property :install_path, kind_of: String, default: ''
 property :autoupdate, kind_of: [TrueClass, FalseClass], default: false
+property :update, kind_of: [TrueClass, FalseClass], default: false
 
 include NetdataInstall::Helper
 
@@ -76,7 +77,7 @@ action :install do
     notifies :install, 'package[compile_packages]', :before
     notifies :restart, 'service[netdata]', :delayed
     not_if { autoupdate_enabled_on_system? }
-    not_if { netdata_installed? }
+    only_if { update || !netdata_installed? }
   end
 
   service 'netdata' do
