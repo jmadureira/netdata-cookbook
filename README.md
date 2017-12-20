@@ -57,6 +57,7 @@ netdata_install 'default' do
   git_revision 'master'
   git_source_directory '/tmp/netdata'
   autoupdate true
+  update true
 end
 ```
 
@@ -65,6 +66,7 @@ end
 - `git_source_directory` - Location to sync the repository to on the server.
 - `install_path` - Change the location where NetData is installed.
 - `autoupdate` - Allow NetData to autoupdate itself via a cron entry.
+- `update` - Allow chef-client to update NetData if it is already installed.
 
 It's highly recommended to use a different path than `/tmp/netdata` for `git_source_directory` and in future versions the default path will change. This is encouraged because when `autoupdate` is set to true NetData will create a symbolic link from the source directory to cron.d and you don't want NetData to create a symbolic link to anything in `/tmp`
 
