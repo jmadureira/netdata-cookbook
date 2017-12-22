@@ -39,6 +39,10 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_config, :create, resource_name)
   end
 
+  def create_netdata_stream(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netdata_stream, :create, resource_name)
+  end
+
   def create_netdata_python_plugin(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_python_plugin, :create, resource_name)
   end
