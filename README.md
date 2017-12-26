@@ -1,6 +1,6 @@
 # NetData Cookbook
 
-[![Build Status](https://travis-ci.org/sergiopena/netdata-cookbook.svg?branch=master)](https://travis-ci.org/sergiopena/netdata-cookbook)
+[![Build Status](https://travis-ci.org/jmadureira/netdata-cookbook.svg?branch=master)](https://travis-ci.org/jmadureira/netdata-cookbook)
 [![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.2.0-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
 [![Chef Version](http://img.shields.io/badge/chef-v12.9.38-orange.svg?style=flat)](https://www.chef.io)
 
@@ -32,7 +32,7 @@ Github: https://github.com/firehol/netdata
 
 ## Usage
 
-This cookbook implements resources to install NetData and manage its 
+This cookbook implements resources to install NetData and manage its
 configuration files.
 
 ## Recipies
