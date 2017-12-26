@@ -100,6 +100,42 @@ Resulting file content (/etc/netdata/netdata.conf):
 
 This resource will restart the NetData service automatically.
 
+### netdata_stream
+
+Manages stream.conf file. Call this as many times as needed.  
+Resource names could be either 'stream' or "#{api_key}" and "#{machine_guid}" depending on whether you configure slave or master NetData.
+Name 'stream' should be used only once to configure slave NetData.
+Values for api_key and machine_guid should be unique.
+
+```rb
+netdata_stream 'stream' do
+  owner 'netdata'
+  group 'netdata'
+  base_directory "#{install_path}/netdata"
+  configurations(
+    'enabled' => 'yes',
+    'destination' => 'netdata_master:19999',
+    'api key' => '11111111-2222-3333-4444-555555555555'
+  )
+end
+```
+
+Resulting file content ("#{install_path}/netdata/etc/netdata/stream.conf"):
+
+```sh
+[stream]
+  enabled = yes
+  destination = netdata_master:19999
+  api key = 11111111-2222-3333-4444-555555555555
+```
+
+- `owner` - User to own the file
+- `group` - Group to own the file
+- `base_directory` - Parent folder where the NetData has been installed to (should be "#{install_path}/netdata" if `install_path` was used in netdata_install resource, otherwise should not be used).
+- `configurations` - Hash of key, value pairs for customizing NetData stream configuration.
+
+This resource will restart the NetData service automatically.
+
 ### netdata_python_plugin
 
 Manages python plugin configuration files.

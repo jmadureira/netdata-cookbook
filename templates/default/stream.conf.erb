@@ -1,0 +1,14 @@
+# netdata configuration for aggregating data from remote hosts
+#
+# API keys authorize a pair of sending-receiving netdata servers.
+# Once their communication is authorized, they can exchange metrics for any
+# number of hosts.
+#
+# You can generate API keys, with the linux command: uuidgen
+
+<% @configurations.each do |name, data| -%>
+[<%= name %>]
+  <% data.each do |key, value| -%>
+  <%= key %> = <%= value %>
+  <% end -%>
+<% end -%>
