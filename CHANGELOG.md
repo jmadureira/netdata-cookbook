@@ -23,4 +23,8 @@ This file is used to list changes made in each version of the netdata cookbook.
                 - Deprecate use of default and install_netdata recipes
                 - Convert to inspec for test-kitchen verifier framework
 
+## 0.3.0
+- Serge A. Salamanka - add update property
+                     - add netdata_stream resource
+
 - - -
