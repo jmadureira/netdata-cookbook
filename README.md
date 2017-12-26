@@ -1,7 +1,7 @@
 # NetData Cookbook
 
 [![Build Status](https://travis-ci.org/jmadureira/netdata-cookbook.svg?branch=master)](https://travis-ci.org/jmadureira/netdata-cookbook)
-[![NetData Cookbook](http://img.shields.io/badge/cookbook-v0.2.0-blue.svg?style=flat)](https://supermarket.chef.io/cookbooks/netdata)
+[![NetData Cookbook](https://img.shields.io/cookbook/v/netdata.svg)](https://supermarket.chef.io/cookbooks/netdata)
 [![Chef Version](http://img.shields.io/badge/chef-v12.9.38-orange.svg?style=flat)](https://www.chef.io)
 
 This cookbook provides a way to download, install and configure NetData
