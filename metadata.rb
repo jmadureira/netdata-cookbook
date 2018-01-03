@@ -4,7 +4,7 @@ maintainer_email 'kekio.one@gmail.com'
 license          'Apache-2.0'
 description      'Compile, install and configure netdata'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.3.0'
+version          '0.3.1'
 source_url		   'https://github.com/jmadureira/netdata-cookbook'
 issues_url		   'https://github.com/jmadureira/netdata-cookbook/issues'
 chef_version     '>= 12.5' if respond_to?(:chef_version)
