@@ -27,4 +27,7 @@ This file is used to list changes made in each version of the netdata cookbook.
 - Serge A. Salamanka - add update property
                      - add netdata_stream resource
 
+## 0.3.1
+- Serge A. Salamanka - use cookbook dependencies with all tested major version numbers
+
 - - -
