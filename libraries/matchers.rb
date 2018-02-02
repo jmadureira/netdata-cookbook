@@ -22,6 +22,7 @@ if defined?(ChefSpec)
   ChefSpec.define_matcher :netdata_install
   ChefSpec.define_matcher :netdata_config
   ChefSpec.define_matcher :netdata_python_plugin
+  ChefSpec.define_matcher :netdata_statsd_plugin
 
   def configure_netdata_bind_rndc_module(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_bind_rndc_conf, :create, resource_name)
@@ -45,5 +46,9 @@ if defined?(ChefSpec)
 
   def create_netdata_python_plugin(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netdata_python_plugin, :create, resource_name)
+  end
+
+  def create_netdata_statsd_plugin(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netdata_statsd_plugin, :create, resource_name)
   end
 end

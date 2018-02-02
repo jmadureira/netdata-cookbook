@@ -179,6 +179,50 @@ tcp:
 
 This resource will restart the NetData service automatically.
 
+### netdata_statsd_plugin
+
+Manages statsd plugin configuration files.
+
+```rb
+netdata_statsd_plugin 'your_app' do
+  owner 'netdata'
+  group 'netdata'
+  base_directory ''
+  app_configuration(
+    'name' => 'your_app',
+    'metrics' => 'metrics to match'
+  )
+  charts(
+    'heap' => {
+      'name' => 'heap',
+      'title' => 'Heap Memory',
+      'dimension' => 'app.memory.heap.used used last 1 1000000'  
+    }
+  )
+end
+```
+
+Resulting file content (/etc/netdata/statsd.d/your_app.conf):
+
+```sh
+# APP
+[app]
+  name = your_app
+  metrics = metrics to match
+
+# CHARTS
+[heap]
+  name = heap
+  title = Heap Memory
+  dimension = app.memory.heap.used used last 1 1000000
+```
+
+- `owner` - User to own the file
+- `group` - Group to own the file
+- `base_directory` - Parent folder that holds the NetData configuration files.
+- `app_configuration` - Hash with the application configuration.
+- `charts` - Hash of each specific chart configuration.
+
 ### netdata_bind_rndc_conf
 
 Deprecated, please use netdata_python_plugin
