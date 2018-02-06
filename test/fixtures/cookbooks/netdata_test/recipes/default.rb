@@ -49,6 +49,19 @@ netdata_python_plugin 'mysql' do
   )
 end
 
+netdata_statsd_plugin 'test_app' do
+  app_configuration(
+    'metrics' => 'app.*'
+  )
+  charts(
+    'mem' => {
+      'name' => 'heap',
+      'title' => 'Heap Memory',
+      'dimension' => 'app.memory.heap.used used last 1 1000000',
+    }
+  )
+end
+
 # remove all code below once these resources have been removed in
 # favor of netdata_python_plugin
 node.override['netdata']['plugins']['python'] \
