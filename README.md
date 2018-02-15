@@ -49,10 +49,11 @@ Deprecated, please use default recipe or netdata_install resource.
 
 ### netdata_install
 
-Installs NetData from source on supported platforms.
+Installs NetData from source or binary on supported platforms (default: source).
 
 ```rb
 netdata_install 'default' do
+  install_method 'source'
   git_repository 'https://github.com/firehol/netdata.git'
   git_revision 'master'
   git_source_directory '/tmp/netdata'
@@ -61,6 +62,7 @@ netdata_install 'default' do
 end
 ```
 
+- `install_method` - Installation method.
 - `git_repository` - Location of git repository to pull the NetData source.
 - `git_revision` - Tag/Branch/Commit to checkout.
 - `git_source_directory` - Location to sync the repository to on the server.
@@ -69,6 +71,29 @@ end
 - `update` - Allow chef-client to update NetData if it is already installed.
 
 It's highly recommended to use a different path than `/tmp/netdata` for `git_source_directory` and in future versions the default path will change. This is encouraged because when `autoupdate` is set to true NetData will create a symbolic link from the source directory to cron.d and you don't want NetData to create a symbolic link to anything in `/tmp`
+
+
+```rb
+netdata_install 'optional' do
+  install_method 'binary'
+  binary_repository 'https://raw.githubusercontent.com/firehol/binary-packages/master'
+  binary_package 'netdata-latest.gz.run'
+  binary_install_options([
+    '--accept'
+  ])
+  binary_post_install_options([
+    '--dont-start-it'
+  ])
+end
+```
+
+- `install_method` - Installation method.
+- `binary_repository` -  Location of the repository for binary packages.
+- `binary_package` - The binary package to be installed.
+- `binary_install_options` - Array of options to pass to the binary package installation script ('--accept' is required for automated installation).
+- `binary_post_install_options` - Array of options to pass to the binary package post installation script.
+
+This resource will create a file `/opt/netdata/version.txt` with the filename of the binary package installed.
 
 ### netdata_config
 

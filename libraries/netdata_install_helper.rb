@@ -2,6 +2,7 @@
 # Libraries:: netdata_install_helper
 #
 # Copyright 2017, Nick Willever
+# Copyright 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -51,6 +52,11 @@ module NetdataInstall
 
     def common_compile_packages
       %w(autoconf autogen automake gcc make)
+    end
+
+    def netdata_binary_package_installed?
+      return false unless ::File.exist?('/opt/netdata/bin/netdata') && ::File.exist?('/opt/netdata/version.txt')
+      node.run_state['NETDATA_BINARY_PACKAGE'] == ::File.read('/opt/netdata/version.txt')
     end
   end
 end
