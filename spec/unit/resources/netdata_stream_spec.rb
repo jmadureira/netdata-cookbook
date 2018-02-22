@@ -2,7 +2,7 @@
 # Specs:: netdata_config
 #
 # Copyright 2017, Nick Willever
-# Copyright 2017, Serge A. Salamanka
+# Copyright 2017,2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,11 +18,11 @@
 
 require 'spec_helper'
 
-describe 'netdata_test::default' do
-  context 'netdata_stream custom configuration' do
+describe_resource 'netdata_spec::stream' do
+  describe 'create' do
+    cached(:run_list) { 'netdata_spec::stream' }
     cached(:chef_run) do
-      runner = ChefSpec::SoloRunner.new
-      runner.converge(described_recipe)
+      ChefSpec::SoloRunner.new(step_into: ['netdata_stream']).converge(run_list)
     end
 
     it 'configures netdata_stream subsection: stream' do
@@ -33,6 +33,19 @@ describe 'netdata_test::default' do
     it 'configures netdata_stream subsection: api_key' do
       expect(chef_run).to create_netdata_stream('11111111-2222-3333-4444-555555555555')
         .with(configurations: { 'enabled' => 'yes' })
+    end
+
+    cached(:template) { chef_run.template('/etc/netdata/stream.conf') }
+
+    it 'creates file /etc/netdata/stream.conf' do
+      expect(chef_run).to create_template('/etc/netdata/stream.conf')
+    end
+
+    it 'restarts netdata service' do
+      expect(template).to notify('service[netdata]').to(:restart).delayed
+      service = chef_run.service('netdata')
+      expect(service).to do_nothing
+      # expect(chef_run).to nothing_service('netdata')
     end
 
     it 'converges successfully' do
