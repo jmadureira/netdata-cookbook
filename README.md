@@ -68,7 +68,7 @@ end
 - `git_source_directory` - Location to sync the repository to on the server.
 - `install_path` - Change the location where NetData is installed.
 - `autoupdate` - Allow NetData to autoupdate itself via a cron entry.
-- `update` - Allow chef-client to update NetData if it is already installed.
+- `update` - Allow chef-client to update NetData if it is already installed (note: use 'true' to update NetData on every chef-client run, 'false' is the default value).
 
 It's highly recommended to use a different path than `/tmp/netdata` for `git_source_directory` and in future versions the default path will change. This is encouraged because when `autoupdate` is set to true NetData will create a symbolic link from the source directory to cron.d and you don't want NetData to create a symbolic link to anything in `/tmp`
 
@@ -89,7 +89,7 @@ end
 
 - `install_method` - Installation method.
 - `binary_repository` -  Location of the repository for binary packages.
-- `binary_package` - The binary package to be installed.
+- `binary_package` - The binary package to be installed (note: 'netdata-latest.gz.run' is the default value that updates NetData on every chef-client run).
 - `binary_install_options` - Array of options to pass to the binary package installation script ('--accept' is required for automated installation).
 - `binary_post_install_options` - Array of options to pass to the binary package post installation script.
 
