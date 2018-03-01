@@ -23,7 +23,7 @@ Github: https://github.com/firehol/netdata
 
 ### Chef
 
-- Chef 12.5+
+- Chef 12.6+
 
 ### Cookbooks
 
