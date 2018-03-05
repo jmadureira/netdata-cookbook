@@ -2,6 +2,7 @@
 # Specs:: netdata_statsd_plugin_spec
 #
 # Copyright 2018, Joao Madureira
+# Copyright 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +18,11 @@
 
 require 'spec_helper'
 
-describe 'netdata_test::default' do
-  context 'netdata_statds_plugin custom app configuration' do
+describe_resource 'netdata_spec::statsd_plugin' do
+  describe 'create' do
+    cached(:run_list) { 'netdata_spec::statsd_plugin' }
     cached(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(step_into: ['netdata_statsd_plugin'])
-      runner.converge(described_recipe)
+      ChefSpec::SoloRunner.new(step_into: ['netdata_statsd_plugin']).converge(run_list)
     end
 
     it 'configures netdata_statds_plugin' do
@@ -42,6 +43,19 @@ describe 'netdata_test::default' do
     it 'creates test_app statsd.d plugin with custom app configuration' do
       expect(chef_run).to render_file('/etc/netdata/statsd.d/test_app.conf')
         .with_content(/\[app\].*metrics\s=\sapp\.\*.*dimension = app.memory.heap.used used last 1 1000000.*/m)
+    end
+
+    cached(:template) { chef_run.template('/etc/netdata/statsd.d/test_app.conf') }
+
+    it 'creates file /etc/netdata/statsd.d/test_app.conf' do
+      expect(chef_run).to create_template('/etc/netdata/statsd.d/test_app.conf')
+    end
+
+    it 'restarts netdata service' do
+      expect(template).to notify('service[netdata]').to(:restart).delayed
+      service = chef_run.service('netdata')
+      expect(service).to do_nothing
+      # expect(chef_run).to nothing_service('netdata')
     end
 
     it 'converges successfully' do

@@ -2,6 +2,7 @@
 # Specs:: netdata_python_plugin_spec
 #
 # Copyright 2017, Nick Willever
+# Copyright 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,11 +18,11 @@
 
 require 'spec_helper'
 
-describe 'netdata_test::default' do
-  context 'netdata_python_plugin custom mysql configuration' do
+describe_resource 'netdata_spec::python_plugin' do
+  describe 'create' do
+    cached(:run_list) { 'netdata_spec::python_plugin' }
     cached(:chef_run) do
-      runner = ChefSpec::SoloRunner.new(step_into: ['netdata_python_plugin'])
-      runner.converge(described_recipe)
+      ChefSpec::SoloRunner.new(step_into: ['netdata_python_plugin']).converge(run_list)
     end
 
     it 'configures netdata_python_plugin' do
@@ -42,6 +43,19 @@ describe 'netdata_test::default' do
     it 'creates mysql configuration file with custom global configuration' do
       expect(chef_run).to render_file('/etc/netdata/python.d/mysql.conf')
         .with_content(/retries:\s5/)
+    end
+
+    cached(:template) { chef_run.template('/etc/netdata/python.d/mysql.conf') }
+
+    it 'creates file /etc/netdata/python.d/mysql.conf' do
+      expect(chef_run).to create_template('/etc/netdata/python.d/mysql.conf')
+    end
+
+    it 'restarts netdata service' do
+      expect(template).to notify('service[netdata]').to(:restart).delayed
+      service = chef_run.service('netdata')
+      expect(service).to do_nothing
+      # expect(chef_run).to nothing_service('netdata')
     end
 
     it 'converges successfully' do

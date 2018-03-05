@@ -3,6 +3,7 @@
 #
 # Copyright 2016, Abiquo
 # Copyright 2017, Nick Willever
+# Copyright 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,8 +26,14 @@ describe 'netdata::default' do
       runner.converge(described_recipe)
     end
 
+    before do
+      allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).and_call_original
+      allow_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('netdata::install_netdata')
+    end
+
     it 'includes install_netdata recipe' do
-      expect(chef_run).to include_recipe('netdata::install_netdata')
+      expect_any_instance_of(Chef::Recipe).to receive(:include_recipe).with('netdata::install_netdata')
+      chef_run
     end
 
     it 'converges successfully' do

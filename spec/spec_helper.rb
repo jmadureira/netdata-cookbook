@@ -2,6 +2,7 @@
 # Specs:: spec_helper
 #
 # Copyright 2016, Abiquo
+# Copyright 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +26,8 @@ RSpec.configure do |config|
   config.order = 'random'
   config.color = true
   config.fail_fast = true
+  config.alias_example_group_to :describe_resource, type: :resource
+  config.alias_example_group_to :describe_helpers, type: :helpers
 end
 
 # silence!!

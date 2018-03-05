@@ -17,11 +17,11 @@
 
 require 'spec_helper'
 
-describe 'netdata_test::default' do
-  context 'netdata_config custom configuration' do
+describe_resource 'netdata_spec::config' do
+  describe 'create' do
+    cached(:run_list) { 'netdata_spec::config' }
     cached(:chef_run) do
-      runner = ChefSpec::SoloRunner.new
-      runner.converge(described_recipe)
+      ChefSpec::SoloRunner.new(step_into: ['netdata_config']).converge(run_list)
     end
 
     it 'configures netdata_config subsection: global' do
@@ -37,6 +37,19 @@ describe 'netdata_test::default' do
     it 'configures netdata_config subsection: plugin:proc:/proc/meminfo' do
       expect(chef_run).to create_netdata_config('plugin:proc:/proc/meminfo')
         .with(configurations: { 'committed memory' => 'yes', 'writeback memory' => 'yes' })
+    end
+
+    cached(:template) { chef_run.template('/etc/netdata/netdata.conf') }
+
+    it 'creates file /etc/netdata/netdata.conf' do
+      expect(chef_run).to create_template('/etc/netdata/netdata.conf')
+    end
+
+    it 'restarts netdata service' do
+      expect(template).to notify('service[netdata]').to(:restart).delayed
+      service = chef_run.service('netdata')
+      expect(service).to do_nothing
+      # expect(chef_run).to nothing_service('netdata')
     end
 
     it 'converges successfully' do
