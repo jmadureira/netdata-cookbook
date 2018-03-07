@@ -30,4 +30,8 @@ This file is used to list changes made in each version of the netdata cookbook.
 ## 0.3.1
 - Serge A. Salamanka - use cookbook dependencies with all tested major version numbers
 
+## 0.4.0
+- João Madureira - Support for statsd plugin configuration
+- Serge A. Salamanka - Support for binary installation
+
 - - -
