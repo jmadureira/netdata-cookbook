@@ -25,7 +25,7 @@ describe_resource 'netdata_spec::statsd_plugin' do
       ChefSpec::SoloRunner.new(step_into: ['netdata_statsd_plugin']).converge(run_list)
     end
 
-    it 'configures netdata_statds_plugin' do
+    it 'configures netdata_statsd_plugin' do
       expect(chef_run).to create_netdata_statsd_plugin('test_app')
         .with(app_configuration: { 'metrics' => 'app.*' },
               charts: { 'mem' => { 'name' => 'heap', 'title' => 'Heap Memory', 'dimension' => 'app.memory.heap.used used last 1 1000000' } })
