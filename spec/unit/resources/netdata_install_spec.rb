@@ -65,7 +65,7 @@ describe_resource 'netdata_install' do
       let(:run_list) { 'netdata_spec::source' }
       let(:chef_run) do
         ChefSpec::SoloRunner.new(
-          platform: 'centos', version: 6.7,
+          platform: 'centos', version: 6.9,
           step_into: ['netdata_install']).converge(run_list)
       end
 

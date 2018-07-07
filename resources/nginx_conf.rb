@@ -20,11 +20,10 @@ resource_name :netdata_nginx_conf
 
 default_action :create
 
-property :conf_file, kind_of: String,
-                     default: '/etc/netdata/python.d/nginx.conf'
-property :owner, kind_of: String, default: 'netdata'
-property :group, kind_of: String, default: 'netdata'
-property :jobs, kind_of: Hash, default: {}
+property :conf_file, String, default: '/etc/netdata/python.d/nginx.conf'
+property :owner, String, default: 'netdata'
+property :group, String, default: 'netdata'
+property :jobs, Hash, default: {}
 
 action :create do
   Chef::Log.warn 'Use of the resource `netdata_nginx_conf` ' \

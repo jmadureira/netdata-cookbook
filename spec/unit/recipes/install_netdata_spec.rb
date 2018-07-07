@@ -43,7 +43,7 @@ describe 'netdata::install_netdata' do
   context 'CentOS' do
     cached(:chef_run) do
       ChefSpec::SoloRunner.new(
-        platform: 'centos', version: 6.7) do |node|
+        platform: 'centos', version: 6.9) do |node|
         node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
       end.converge(described_recipe)
     end

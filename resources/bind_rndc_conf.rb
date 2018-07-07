@@ -20,11 +20,10 @@ resource_name :netdata_bind_rndc_conf
 
 default_action :create
 
-property :conf_file, kind_of: String,
-                     default: '/etc/netdata/python.d/bind_rndc.conf'
-property :owner, kind_of: String, default: 'netdata'
-property :group, kind_of: String, default: 'netdata'
-property :named_stats_path, kind_of: String, default: nil
+property :conf_file, String, default: '/etc/netdata/python.d/bind_rndc.conf'
+property :owner, String, default: 'netdata'
+property :group, String, default: 'netdata'
+property :named_stats_path, String, default: '/var/log/bind/named.stats'
 
 action :create do
   Chef::Log.warn 'Use of the resource `netdata_bind_rndc_conf` ' \
