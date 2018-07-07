@@ -86,7 +86,7 @@ action :install do
       notifies :install, 'package[compile_packages]', :before
       notifies :restart, 'service[netdata]', :delayed
       not_if { autoupdate_enabled_on_system? }
-      only_if { update || !netdata_installed? }
+      only_if { new_resource.update || !netdata_installed? }
     end
 
     service 'netdata' do
