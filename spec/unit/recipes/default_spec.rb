@@ -21,9 +21,8 @@ require 'spec_helper'
 
 describe 'netdata::default' do
   context 'When all attributes are default' do
-    cached(:chef_run) do
-      runner = ChefSpec::SoloRunner.new
-      runner.converge(described_recipe)
+    let(:chef_run) do
+      ChefSpec::SoloRunner.new().converge(described_recipe)
     end
 
     before do
