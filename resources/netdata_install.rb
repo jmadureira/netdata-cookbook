@@ -67,8 +67,14 @@ action :install do
       action :nothing
     end
 
+    if node['platform_family'] == 'debian' && node['platform_version'] =~ /^18/
+      package_names = %w(git bash curl iproute2 python python-yaml)
+    else
+      package_names = %w(git bash curl iproute python python-yaml)
+    end
+
     package 'plugin_packages' do
-      package_name %w(git bash curl iproute python python-yaml)
+      package_name package_names
     end
 
     git new_resource.git_source_directory do
