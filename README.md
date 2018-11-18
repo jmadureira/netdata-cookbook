@@ -16,7 +16,7 @@ Github: https://github.com/firehol/netdata
 ### Platforms
 
 - Amazon Linux 2013.09+
-- Centos 6.7+
+- Centos 6.9+
 - Debian 7.11+
 - Fedora 25+
 - Ubuntu 14.04+

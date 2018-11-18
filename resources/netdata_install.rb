@@ -20,18 +20,17 @@ resource_name :netdata_install
 
 default_action :install
 
-property :install_method, kind_of: String, default: 'source'
-property :binary_repository, kind_of: String, default: 'https://raw.githubusercontent.com/firehol/binary-packages/master'
-property :binary_package, kind_of: String, default: 'netdata-latest.gz.run'
+property :install_method, String, default: 'source'
+property :binary_repository, String, default: 'https://raw.githubusercontent.com/firehol/binary-packages/master'
+property :binary_package, String, default: 'netdata-latest.gz.run'
 property :binary_install_options, Array, default: ['--accept']
 property :binary_post_install_options, Array, default: []
-property :git_repository, kind_of: String,
-                          default: 'https://github.com/firehol/netdata.git'
-property :git_revision, kind_of: String, default: 'master'
-property :git_source_directory, kind_of: String, default: '/tmp/netdata'
-property :install_path, kind_of: String, default: ''
-property :autoupdate, kind_of: [TrueClass, FalseClass], default: false
-property :update, kind_of: [TrueClass, FalseClass], default: false
+property :git_repository, String, default: 'https://github.com/firehol/netdata.git'
+property :git_revision, String, default: 'master'
+property :git_source_directory, String, default: '/tmp/netdata'
+property :install_path, String, default: ''
+property :autoupdate, [TrueClass, FalseClass], default: false
+property :update, [TrueClass, FalseClass], default: false
 
 include NetdataInstall::Helper
 

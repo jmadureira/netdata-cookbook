@@ -21,8 +21,8 @@ resource_name :netdata_stream
 default_action :create
 
 property :config_name, String, name_property: true
-property :owner, kind_of: String, default: 'netdata'
-property :group, kind_of: String, default: 'netdata'
+property :owner, String, default: 'netdata'
+property :group, String, default: 'netdata'
 property :configurations, Hash, default: {}
 property :base_directory, String, default: ''
 
