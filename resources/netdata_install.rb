@@ -68,6 +68,8 @@ action :install do
 
     package_names = if node['platform'] == 'ubuntu' && node['platform_version'].to_f >= 18.04
                       %w(git bash curl iproute2 python python-yaml)
+                    elsif node['platform'] == 'debian' && node['platform_version'].to_f >= 10
+                      %w(git bash curl iproute2 python python-yaml)
                     else
                       %w(git bash curl iproute python python-yaml)
                     end
