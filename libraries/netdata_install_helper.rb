@@ -58,9 +58,9 @@ module NetdataInstall
       %w(git bash curl python python-yaml) +
       case node['platform']
       when 'ubuntu'
-        %w(iproute2) if node['platform_version'].to_f >= 18.04
+        node['platform_version'].to_f >= 18.04 ? %w(iproute2) : %w(iproute)
       when 'debian'
-        %w(iproute2) if node['platform_version'].to_f >= 10
+        node['platform_version'].to_f >= 10    ? %w(iproute2) : %w(iproute)
       else
         %w(iproute)
       end
