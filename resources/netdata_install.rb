@@ -66,14 +66,8 @@ action :install do
       action :nothing
     end
 
-    package_names = if node['platform'] == 'ubuntu' && node['platform_version'].to_f >= 18.04
-                      %w(git bash curl iproute2 python python-yaml)
-                    else
-                      %w(git bash curl iproute python python-yaml)
-                    end
-
     package 'plugin_packages' do
-      package_name package_names
+      package_name plugin_packages
     end
 
     git new_resource.git_source_directory do

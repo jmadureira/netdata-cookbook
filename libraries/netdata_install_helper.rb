@@ -54,6 +54,18 @@ module NetdataInstall
       %w(autoconf autogen automake gcc make)
     end
 
+    def plugin_packages
+      %w(git bash curl python python-yaml) +
+      case node['platform']
+      when 'ubuntu'
+        node['platform_version'].to_f >= 18.04 ? %w(iproute2) : %w(iproute)
+      when 'debian'
+        node['platform_version'].to_f >= 10    ? %w(iproute2) : %w(iproute)
+      else
+        %w(iproute)
+      end
+    end
+
     def netdata_binary_package_installed?
       return false unless ::File.exist?('/opt/netdata/bin/netdata') && ::File.exist?('/opt/netdata/version.txt')
       node.run_state['NETDATA_BINARY_PACKAGE'] == ::File.read('/opt/netdata/version.txt')
