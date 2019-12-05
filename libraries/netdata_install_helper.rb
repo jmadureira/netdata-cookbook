@@ -42,8 +42,7 @@ module NetdataInstall
                  when 'debian'
                    %w(zlib1g-dev uuid-dev libmnl-dev netcat pkg-config)
                  when 'fedora'
-                   %w(zlib-devel libuuid-devel libmnl-devel autoconf-archive
-                      pkgconfig nc findutils)
+                   %w(zlib-devel libuuid-devel libmnl-devel autoconf-archive pkgconfig nc findutils)
                  else
                    raise 'Unsupported platform family'
                  end
@@ -56,14 +55,14 @@ module NetdataInstall
 
     def plugin_packages
       %w(git bash curl python python-yaml) +
-      case node['platform']
-      when 'ubuntu'
-        node['platform_version'].to_f >= 18.04 ? %w(iproute2) : %w(iproute)
-      when 'debian'
-        node['platform_version'].to_f >= 10    ? %w(iproute2) : %w(iproute)
-      else
-        %w(iproute)
-      end
+        case node['platform']
+        when 'ubuntu'
+          node['platform_version'].to_f >= 18.04 ? %w(iproute2) : %w(iproute)
+        when 'debian'
+          node['platform_version'].to_f >= 10    ? %w(iproute2) : %w(iproute)
+        else
+          %w(iproute)
+        end
     end
 
     def netdata_binary_package_installed?

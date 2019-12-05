@@ -58,7 +58,9 @@ action :install do
         include_recipe 'yum-epel'
       end
     when 'debian'
-      include_recipe 'apt'
+      apt_update 'update' do
+        action :update
+      end
     end
 
     package 'compile_packages' do

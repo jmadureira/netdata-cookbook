@@ -55,7 +55,7 @@ describe_resource 'netdata_install' do
       end
 
       it 'includes apt cookbook' do
-        expect(chef_run).to include_recipe('apt')
+        expect(chef_run).to update_apt_update('update')
       end
 
       it_behaves_like :source

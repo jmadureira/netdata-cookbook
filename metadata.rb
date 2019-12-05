@@ -9,7 +9,6 @@ issues_url       'https://github.com/jmadureira/netdata-cookbook/issues'
 chef_version     '>= 13.0'
 
 depends 'yum-epel', '< 3.0.0'
-depends 'apt', '< 7.0.0'
 
 %w(debian ubuntu centos redhat oracle amazon fedora).each do |platform|
   supports platform
