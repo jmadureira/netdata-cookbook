@@ -1,8 +1,8 @@
-# Cookbook Name:: netdata
+# Cookbook:: netdata
 # Specs:: netdata_statsd_plugin_spec
 #
-# Copyright 2018, Joao Madureira
-# Copyright 2018, Serge A. Salamanka
+# Copyright:: 2018, Joao Madureira
+# Copyright:: 2018, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

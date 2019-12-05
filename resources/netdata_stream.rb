@@ -1,8 +1,8 @@
-# Cookbook Name:: netdata
+# Cookbook:: netdata
 # Resources:: netdata_config
 #
-# Copyright 2017, Nick Willever
-# Copyright 2017, Serge A. Salamanka
+# Copyright:: 2017, Nick Willever
+# Copyright:: 2017, Serge A. Salamanka
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

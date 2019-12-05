@@ -1,7 +1,7 @@
-# Cookbook Name:: netdata
+# Cookbook:: netdata
 # Resources:: netdata_statsd_plugin
 #
-# Copyright 2018, Joao Madureira
+# Copyright:: 2018, Joao Madureira
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
