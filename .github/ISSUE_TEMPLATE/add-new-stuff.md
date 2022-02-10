@@ -1,16 +1,16 @@
 ---
 name: add new stuff
-about: Suggest an idea for this project
-title: ''
+about: Suggest an idesdsadsdsfsd
+title: "[Request] - Register new endpoint"
 labels: ''
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**What is the name of the API**
+A human readable name of your API
 
-**Describe the solution you'd like**
+**What will be the context path from where request will served**
 A clear and concise description of what you want to happen.
 
 **Describe alternatives you've considered**
