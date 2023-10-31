@@ -16,6 +16,7 @@
 # limitations under the License.
 
 resource_name :netdata_config
+provides :netdata_config
 
 default_action :create
 

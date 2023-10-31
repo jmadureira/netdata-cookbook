@@ -16,6 +16,7 @@
 # limitations under the License.
 
 resource_name :netdata_statsd_plugin
+provides :netdata_statsd_plugin
 
 default_action :create
 

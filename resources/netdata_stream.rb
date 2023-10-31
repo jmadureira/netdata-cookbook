@@ -17,6 +17,7 @@
 # limitations under the License.
 
 resource_name :netdata_stream
+provides :netdata_stream
 
 default_action :create
 

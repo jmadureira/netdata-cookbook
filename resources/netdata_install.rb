@@ -17,6 +17,7 @@
 # limitations under the License.
 
 resource_name :netdata_install
+provides :netdata_install
 
 default_action :install
 
