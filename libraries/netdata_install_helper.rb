@@ -67,6 +67,7 @@ module NetdataInstall
 
     def netdata_binary_package_installed?
       return false unless ::File.exist?('/opt/netdata/bin/netdata') && ::File.exist?('/opt/netdata/version.txt')
+
       node.run_state['NETDATA_BINARY_PACKAGE'] == ::File.read('/opt/netdata/version.txt')
     end
   end

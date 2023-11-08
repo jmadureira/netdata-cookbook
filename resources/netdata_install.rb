@@ -81,10 +81,10 @@ action :install do
 
     execute 'install' do
       cwd new_resource.git_source_directory
-      command <<-EOF
+      command <<-SH
         ./netdata-installer.sh #{enable_autoupdate} #{custom_install_path} \
         --zlib-is-really-here --dont-wait --dont-start-it
-      EOF
+      SH
       notifies :install, 'package[compile_packages]', :before
       notifies :restart, 'service[netdata]', :delayed
       not_if { autoupdate_enabled_on_system? }
@@ -115,7 +115,7 @@ action :install do
         end
       end
       remote_file "#{Chef::Config[:file_cache_path]}/netdata-package.gz.run" do
-        source lazy { "#{binary_repository}/#{::File.read("#{::Chef::Config[:file_cache_path]}/netdata_latest.txt")}" }
+        source(lazy { "#{binary_repository}/#{::File.read("#{::Chef::Config[:file_cache_path]}/netdata_latest.txt")}" })
         action :create
         not_if { netdata_binary_package_installed? }
       end
@@ -142,12 +142,12 @@ action :install do
 
     binary_install_options = new_resource.binary_install_options.join(' ')
     binary_post_install_options =
-      new_resource.binary_post_install_options.empty? ? ' ' : '--' + ' ' + new_resource.binary_post_install_options.join(' ')
+      new_resource.binary_post_install_options.empty? ? ' ' : "-- #{new_resource.binary_post_install_options.join(' ')}"
 
     bash 'install_netdata_binary_package' do
-      code <<-EOH
+      code <<-SH
         sh #{Chef::Config[:file_cache_path]}/netdata-package.gz.run #{binary_install_options} #{binary_post_install_options}
-      EOH
+      SH
       notifies :create, 'file[/opt/netdata/version.txt]', :immediately
       notifies :restart, 'service[netdata]', :delayed
       not_if { netdata_binary_package_installed? }
@@ -158,7 +158,7 @@ action :install do
     end
 
     file '/opt/netdata/version.txt' do
-      content lazy { node.run_state['NETDATA_BINARY_PACKAGE'] }
+      content(lazy { node.run_state['NETDATA_BINARY_PACKAGE'] })
       owner 'netdata'
       group 'netdata'
       action :nothing

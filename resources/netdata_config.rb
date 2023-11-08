@@ -30,8 +30,10 @@ action :create do
   # As we're using the accumulator pattern we need to shove everything
   # into the root run context so each of the sections can find the parent
   with_run_context :root do
-    edit_resource(:template,
-      "#{new_resource.base_directory}/etc/netdata/netdata.conf") do |new_resource|
+    edit_resource(
+      :template,
+      "#{new_resource.base_directory}/etc/netdata/netdata.conf"
+    ) do |new_resource|
       cookbook 'netdata'
       source 'netdata.conf.erb'
       owner new_resource.owner
