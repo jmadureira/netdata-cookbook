@@ -16,6 +16,7 @@
 # limitations under the License.
 
 resource_name :netdata_python_plugin
+provides :netdata_python_plugin
 
 default_action :create
 

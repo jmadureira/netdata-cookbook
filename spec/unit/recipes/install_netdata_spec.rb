@@ -22,8 +22,7 @@ require 'spec_helper'
 describe 'netdata::install_netdata' do
   context 'Ubuntu' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(
-        platform: 'ubuntu', version: 16.04) do |node|
+      ChefSpec::SoloRunner.new(platform: 'ubuntu', version: 16.04) do |node|
         node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
       end.converge(described_recipe)
     end
@@ -42,8 +41,7 @@ end
 describe 'netdata::install_netdata' do
   context 'CentOS' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(
-        platform: 'centos', version: 6.9) do |node|
+      ChefSpec::SoloRunner.new(platform: 'centos', version: 6.9) do |node|
         node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
       end.converge(described_recipe)
     end
@@ -62,12 +60,11 @@ end
 describe 'netdata::install_netdata' do
   context 'Unsupported' do
     cached(:chef_run) do
-      ChefSpec::SoloRunner.new(
-        platform: 'windows', version: 10) do |node|
+      ChefSpec::SoloRunner.new(platform: 'windows', version: 10) do |node|
         node.override['netdata']['plugins']['python']['mysql']['enabled'] = true
       end.converge(described_recipe)
     end
-    cached(:chef_run_only_recipe) { ChefSpec::SoloRunner.new().converge(described_recipe) }
+    cached(:chef_run_only_recipe) { ChefSpec::SoloRunner.new.converge(described_recipe) }
     it 'raises an error' do
       # to cover netdata_install resource without stepping into it:
       expect(chef_run_only_recipe).to install_netdata_install('default')

@@ -51,7 +51,8 @@ describe_resource 'netdata_install' do
       cached(:chef_run) do
         ChefSpec::SoloRunner.new(
           platform: 'ubuntu', version: 16.04,
-          step_into: ['netdata_install']).converge(run_list)
+          step_into: ['netdata_install']
+        ).converge(run_list)
       end
 
       it 'includes apt cookbook' do
@@ -66,7 +67,8 @@ describe_resource 'netdata_install' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new(
           platform: 'centos', version: 6.9,
-          step_into: ['netdata_install']).converge(run_list)
+          step_into: ['netdata_install']
+        ).converge(run_list)
       end
 
       it 'includes yum-epel cookbook and sets yum attributes' do
@@ -82,9 +84,10 @@ describe_resource 'netdata_install' do
       let(:run_list) { 'netdata_spec::binary' }
       let(:chef_run) do
         ChefSpec::SoloRunner.new(
-          step_into: ['netdata_install']) do |node|
-            node.automatic['kernel']['machine'] = 'x86'
-          end.converge(run_list)
+          step_into: ['netdata_install']
+        ) do |node|
+          node.automatic['kernel']['machine'] = 'x86'
+        end.converge(run_list)
       end
       it 'raises an error if not 64bit' do
         expect { chef_run }.to raise_error(RuntimeError)
@@ -94,11 +97,10 @@ describe_resource 'netdata_install' do
     context 'binary' do
       let(:run_list) { 'netdata_spec::binary' }
       let(:chef_run) do
-        ChefSpec::SoloRunner.new(
-          step_into: ['netdata_install']) do |node|
-            node.automatic['kernel']['machine'] = 'x86_64'
-            node.run_state['NETDATA_BINARY_PACKAGE'] = 'netdata-latest.gz.run'
-          end.converge(run_list)
+        ChefSpec::SoloRunner.new(step_into: ['netdata_install']) do |node|
+          node.automatic['kernel']['machine'] = 'x86_64'
+          node.run_state['NETDATA_BINARY_PACKAGE'] = 'netdata-latest.gz.run'
+        end.converge(run_list)
       end
       let(:bash) { chef_run.bash('install_netdata_binary_package') }
       it 'installs with default options' do
@@ -130,7 +132,7 @@ describe_resource 'netdata_install' do
       let(:chef_run) do
         ChefSpec::SoloRunner.new(step_into: ['netdata_install']).converge(run_list)
       end
-      let(:chef_run_only_recipe) { ChefSpec::SoloRunner.new().converge(run_list) }
+      let(:chef_run_only_recipe) { ChefSpec::SoloRunner.new.converge(run_list) }
 
       it 'raises an error' do
         # to cover netdata_install resource without stepping into it:
